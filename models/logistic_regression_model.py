@@ -4,10 +4,11 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import numpy as np
+import json
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, roc_auc_score, confusion_matrix
 
 # Importing Dataset
-df = pd.read_csv('/Users/kianmhz/Desktop/ML-Project/dataset/fraud_oracle_preprocessed.csv')
+df = pd.read_csv('/Users/kianmhz/Desktop/ML-Project/dataset/fraud_oracle_preprocessed_ratio5.csv')
 
 # --------------------------------------------------------------
 
@@ -33,7 +34,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 print(f"\nTraining set: {X_train.shape[0]} samples")
-print(f"Test set: {X_test.shape[0]} samples")
+print(f"Test set: {X_test.shape[0]} samples\n")
 
 # Scale numerical features to help with training
 scaler = StandardScaler()
@@ -42,6 +43,20 @@ scaler = StandardScaler()
 # (after one-hot, everything is numeric; scaling the full matrix is fine)
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
+
+# --------------------------------------------------------------
+
+# Load class distribution and compute class weights
+with open('/Users/kianmhz/Desktop/ML-Project/json/distribution_ratio5.json', 'r') as f:
+    distribution = json.load(f)
+
+# Compute class weights: total_samples / (n_classes * class_count)
+distribution = distribution["class_counts"]
+
+total_samples = sum(distribution.values())
+n_classes = len(distribution)
+class_weights = {int(k): total_samples / (n_classes * v) for k, v in distribution.items()}
+print(f"Class weights from distribution_ratio5.json: {class_weights}")
 
 # --------------------------------------------------------------
 
@@ -57,14 +72,21 @@ class LogisticRegression(nn.Module):
 # Training Model
 model = LogisticRegression(n_features=X_train.shape[1])
 
-loss_function = nn.BCELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-
 # Convert training data to tensors
 X_train_tensor = torch.tensor(X_train_scaled, dtype=torch.float32)
 y_train_tensor = torch.tensor(y_train.to_numpy(), dtype=torch.float32)
 
-for epoch in range(20):
+class_weights_tensor = torch.tensor(
+    [class_weights[0], class_weights[1]],
+    dtype=torch.float32
+)
+
+sample_weights = class_weights_tensor[y_train_tensor.long()]
+
+loss_function = nn.BCELoss(weight=sample_weights)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+
+for epoch in range(600):
     model.train()
     outputs = model(X_train_tensor)
     optimizer.zero_grad()
@@ -87,7 +109,7 @@ with torch.no_grad():
     roc_auc = roc_auc_score(y_test, y_pred_proba)
     confusion = confusion_matrix(y_test, y_pred)
 
-    print(f"Accuracy: {accuracy:.4f}")
+    print(f"\nAccuracy: {accuracy:.4f}")
     print(f"Recall: {recall:.4f}")
     print(f"Precision: {precision:.4f}")
     print(f"F1 Score: {f1:.4f}")
