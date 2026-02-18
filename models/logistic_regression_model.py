@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.preprocessing import StandardScaler
 import numpy as np
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, roc_auc_score, confusion_matrix
 
@@ -18,16 +18,12 @@ categorical_features = df.select_dtypes(include=['object','category']).columns
 df.head()
 
 # Seperate Data into input features and expected outputs
-X = df.drop('FraudFound_P', axis=1)
-y = df['FraudFound_P']
+X = df.drop('FraudFound_P', axis=1).copy()
+y = df['FraudFound_P'].astype(int)
 
 # Convert categorical features to numerical
-label_encoders = {}
-for col in categorical_features:
-    if col in X.columns:
-        le = LabelEncoder()
-        X[col] = le.fit_transform(X[col].astype(str))
-        label_encoders[col] = le
+# (One-Hot Encoding instead of LabelEncoder)
+X = pd.get_dummies(X, columns=categorical_features, drop_first=True)
 
 # --------------------------------------------------------------
 
@@ -41,13 +37,11 @@ print(f"Test set: {X_test.shape[0]} samples")
 
 # Scale numerical features to help with training
 scaler = StandardScaler()
-X_train_scaled = X_train.copy()
-X_test_scaled = X_test.copy()
 
 # Only scale feature columns (exclude target)
-numerical_cols = [col for col in X.columns if X[col].dtype in [np.float64, np.int64]]
-X_train_scaled[numerical_cols] = scaler.fit_transform(X_train[numerical_cols])
-X_test_scaled[numerical_cols] = scaler.transform(X_test[numerical_cols])
+# (after one-hot, everything is numeric; scaling the full matrix is fine)
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 
 # --------------------------------------------------------------
 
@@ -61,14 +55,14 @@ class LogisticRegression(nn.Module):
         return torch.sigmoid(self.linear(x)).squeeze(1)
 
 # Training Model
-model = LogisticRegression(n_features=X_train_scaled.shape[1])
+model = LogisticRegression(n_features=X_train.shape[1])
 
 loss_function = nn.BCELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
 # Convert training data to tensors
-X_train_tensor = torch.tensor(X_train_scaled.values, dtype=torch.float32)
-y_train_tensor = torch.tensor(y_train.values, dtype=torch.float32)
+X_train_tensor = torch.tensor(X_train_scaled, dtype=torch.float32)
+y_train_tensor = torch.tensor(y_train.to_numpy(), dtype=torch.float32)
 
 for epoch in range(20):
     model.train()
@@ -79,11 +73,11 @@ for epoch in range(20):
     optimizer.step()
 
     model.eval()
-    
+
 with torch.no_grad():
-    X_test_tensor = torch.tensor(X_test_scaled.values, dtype=torch.float32)
-    y_test_tensor = torch.tensor(y_test.values, dtype=torch.float32)
-    y_pred_proba = model(X_test_tensor).numpy()
+    X_test_tensor = torch.tensor(X_test_scaled, dtype=torch.float32)
+    y_test_tensor = torch.tensor(y_test.to_numpy(), dtype=torch.float32)
+    y_pred_proba = model(X_test_tensor).cpu().numpy()
     y_pred = (y_pred_proba > 0.5).astype(int)
 
     accuracy = accuracy_score(y_test, y_pred)
