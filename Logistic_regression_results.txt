@@ -1,0 +1,107 @@
+
+Training set: 11102 samples
+Validation set: 1234 samples
+Test set: 3084 samples
+
+Class weights from distribution.json: {0: 0.5318341725874319, 1: 8.353196099674973}
+
+Epoch   1 | Train Loss: 0.780109 | Val ROC-AUC: 0.402691
+Epoch  10 | Train Loss: 0.759471 | Val ROC-AUC: 0.421272
+Epoch  20 | Train Loss: 0.739308 | Val ROC-AUC: 0.451153
+Epoch  30 | Train Loss: 0.721673 | Val ROC-AUC: 0.479567
+Epoch  40 | Train Loss: 0.706136 | Val ROC-AUC: 0.508038
+Epoch  50 | Train Loss: 0.692402 | Val ROC-AUC: 0.538432
+Epoch  60 | Train Loss: 0.680239 | Val ROC-AUC: 0.571295
+Epoch  70 | Train Loss: 0.669441 | Val ROC-AUC: 0.601806
+Epoch  80 | Train Loss: 0.659824 | Val ROC-AUC: 0.628903
+Epoch  90 | Train Loss: 0.651226 | Val ROC-AUC: 0.652575
+Epoch 100 | Train Loss: 0.643501 | Val ROC-AUC: 0.672402
+Epoch 110 | Train Loss: 0.636515 | Val ROC-AUC: 0.688595
+Epoch 120 | Train Loss: 0.630149 | Val ROC-AUC: 0.701945
+Epoch 130 | Train Loss: 0.624307 | Val ROC-AUC: 0.712547
+Epoch 140 | Train Loss: 0.618907 | Val ROC-AUC: 0.721016
+Epoch 150 | Train Loss: 0.613889 | Val ROC-AUC: 0.727947
+Epoch 160 | Train Loss: 0.609201 | Val ROC-AUC: 0.733353
+Epoch 170 | Train Loss: 0.604803 | Val ROC-AUC: 0.737768
+Epoch 180 | Train Loss: 0.600663 | Val ROC-AUC: 0.741554
+Epoch 190 | Train Loss: 0.596756 | Val ROC-AUC: 0.744094
+Epoch 200 | Train Loss: 0.593059 | Val ROC-AUC: 0.746913
+Epoch 210 | Train Loss: 0.589555 | Val ROC-AUC: 0.748998
+Epoch 220 | Train Loss: 0.586228 | Val ROC-AUC: 0.750944
+Epoch 230 | Train Loss: 0.583066 | Val ROC-AUC: 0.752429
+Epoch 240 | Train Loss: 0.580056 | Val ROC-AUC: 0.753798
+Epoch 250 | Train Loss: 0.577189 | Val ROC-AUC: 0.755126
+Epoch 260 | Train Loss: 0.574455 | Val ROC-AUC: 0.755988
+Epoch 270 | Train Loss: 0.571846 | Val ROC-AUC: 0.757188
+Epoch 280 | Train Loss: 0.569354 | Val ROC-AUC: 0.758469
+Epoch 290 | Train Loss: 0.566972 | Val ROC-AUC: 0.759425
+Epoch 300 | Train Loss: 0.564694 | Val ROC-AUC: 0.760158
+Epoch 310 | Train Loss: 0.562515 | Val ROC-AUC: 0.761032
+Epoch 320 | Train Loss: 0.560429 | Val ROC-AUC: 0.761778
+Epoch 330 | Train Loss: 0.558431 | Val ROC-AUC: 0.762488
+Epoch 340 | Train Loss: 0.556516 | Val ROC-AUC: 0.763257
+Epoch 350 | Train Loss: 0.554681 | Val ROC-AUC: 0.763968
+Epoch 360 | Train Loss: 0.552921 | Val ROC-AUC: 0.764574
+Epoch 370 | Train Loss: 0.551233 | Val ROC-AUC: 0.765517
+Epoch 380 | Train Loss: 0.549614 | Val ROC-AUC: 0.766088
+Epoch 390 | Train Loss: 0.548059 | Val ROC-AUC: 0.766507
+Epoch 400 | Train Loss: 0.546567 | Val ROC-AUC: 0.766892
+Epoch 410 | Train Loss: 0.545135 | Val ROC-AUC: 0.767486
+Epoch 420 | Train Loss: 0.543760 | Val ROC-AUC: 0.767905
+Epoch 430 | Train Loss: 0.542439 | Val ROC-AUC: 0.768651
+Epoch 440 | Train Loss: 0.541171 | Val ROC-AUC: 0.769129
+Epoch 450 | Train Loss: 0.539952 | Val ROC-AUC: 0.769653
+Epoch 460 | Train Loss: 0.538782 | Val ROC-AUC: 0.770387
+Epoch 470 | Train Loss: 0.537657 | Val ROC-AUC: 0.770876
+Epoch 480 | Train Loss: 0.536577 | Val ROC-AUC: 0.771389
+Epoch 490 | Train Loss: 0.535539 | Val ROC-AUC: 0.772251
+Epoch 500 | Train Loss: 0.534542 | Val ROC-AUC: 0.772717
+Epoch 510 | Train Loss: 0.533584 | Val ROC-AUC: 0.773206
+Epoch 520 | Train Loss: 0.532663 | Val ROC-AUC: 0.773847
+Epoch 530 | Train Loss: 0.531778 | Val ROC-AUC: 0.774499
+Epoch 540 | Train Loss: 0.530928 | Val ROC-AUC: 0.774953
+Epoch 550 | Train Loss: 0.530111 | Val ROC-AUC: 0.775315
+Epoch 560 | Train Loss: 0.529326 | Val ROC-AUC: 0.775489
+Epoch 570 | Train Loss: 0.528572 | Val ROC-AUC: 0.775897
+Epoch 580 | Train Loss: 0.527847 | Val ROC-AUC: 0.776258
+Epoch 590 | Train Loss: 0.527151 | Val ROC-AUC: 0.776759
+Epoch 600 | Train Loss: 0.526481 | Val ROC-AUC: 0.776992
+Epoch 610 | Train Loss: 0.525838 | Val ROC-AUC: 0.777400
+Epoch 620 | Train Loss: 0.525220 | Val ROC-AUC: 0.777936
+Epoch 630 | Train Loss: 0.524627 | Val ROC-AUC: 0.778320
+Epoch 640 | Train Loss: 0.524056 | Val ROC-AUC: 0.778646
+Epoch 650 | Train Loss: 0.523508 | Val ROC-AUC: 0.779007
+Epoch 660 | Train Loss: 0.522982 | Val ROC-AUC: 0.779404
+Epoch 670 | Train Loss: 0.522476 | Val ROC-AUC: 0.779718
+Epoch 680 | Train Loss: 0.521990 | Val ROC-AUC: 0.779928
+Epoch 690 | Train Loss: 0.521523 | Val ROC-AUC: 0.780114
+Epoch 700 | Train Loss: 0.521074 | Val ROC-AUC: 0.780219
+Epoch 710 | Train Loss: 0.520644 | Val ROC-AUC: 0.780347
+Epoch 720 | Train Loss: 0.520230 | Val ROC-AUC: 0.780603
+Epoch 730 | Train Loss: 0.519832 | Val ROC-AUC: 0.780650
+Epoch 740 | Train Loss: 0.519450 | Val ROC-AUC: 0.780871
+Epoch 750 | Train Loss: 0.519083 | Val ROC-AUC: 0.781128
+Epoch 760 | Train Loss: 0.518730 | Val ROC-AUC: 0.781198
+Epoch 770 | Train Loss: 0.518392 | Val ROC-AUC: 0.781361
+Epoch 780 | Train Loss: 0.518067 | Val ROC-AUC: 0.781407
+Epoch 790 | Train Loss: 0.517754 | Val ROC-AUC: 0.781524
+Epoch 800 | Train Loss: 0.517455 | Val ROC-AUC: 0.781640
+Epoch 810 | Train Loss: 0.517166 | Val ROC-AUC: 0.781559
+Epoch 820 | Train Loss: 0.516890 | Val ROC-AUC: 0.781745
+Epoch 830 | Train Loss: 0.516624 | Val ROC-AUC: 0.781780
+Epoch 840 | Train Loss: 0.516369 | Val ROC-AUC: 0.781803
+Epoch 850 | Train Loss: 0.516124 | Val ROC-AUC: 0.781862
+
+Early stopping: no Val ROC-AUC improvement for 20 epochs.
+Best Val ROC-AUC: 0.781885 at epoch 833
+
+TEST RESULTS (using best val ROC-AUC model from epoch 833)
+Accuracy: 0.6041
+Recall: 0.9297
+Precision: 0.1246
+F1 Score: 0.2198
+ROC AUC: 0.7893
+
+Confusion Matrix:
+[[1691 1208]
+ [  13  172]]

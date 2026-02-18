@@ -8,7 +8,7 @@ import json
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, roc_auc_score, confusion_matrix
 
 # Importing Dataset
-df = pd.read_csv('/Users/kianmhz/Desktop/ML-Project/dataset/fraud_oracle_preprocessed_ratio.csv')
+df = pd.read_csv('/Users/kianmhz/Desktop/ML-Project/dataset/fraud_oracle_preprocessed.csv')
 
 # --------------------------------------------------------------
 # Seperating Numerical and Categorical features
@@ -50,14 +50,14 @@ X_test_scaled = scaler.transform(X_test)
 # --------------------------------------------------------------
 # Load class distribution and compute class weights
 
-with open('/Users/kianmhz/Desktop/ML-Project/json/distribution_ratio5.json', 'r') as f:
+with open('/Users/kianmhz/Desktop/ML-Project/json/distribution.json', 'r') as f:
     distribution = json.load(f)
 
 distribution = distribution["class_counts"]
 total_samples = sum(distribution.values())
 n_classes = len(distribution)
 class_weights = {int(k): total_samples / (n_classes * v) for k, v in distribution.items()}
-print(f"Class weights from distribution_ratio5.json: {class_weights}\n")
+print(f"Class weights from distribution.json: {class_weights}\n")
 
 # --------------------------------------------------------------
 # Model
