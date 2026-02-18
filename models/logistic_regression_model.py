@@ -8,7 +8,7 @@ import json
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, roc_auc_score, confusion_matrix
 
 # Importing Dataset
-df = pd.read_csv('/Users/kianmhz/Desktop/ML-Project/dataset/fraud_oracle_preprocessed_ratio5.csv')
+df = pd.read_csv('/Users/kianmhz/Desktop/ML-Project/dataset/fraud_oracle_preprocessed_ratio.csv')
 
 # --------------------------------------------------------------
 # Seperating Numerical and Categorical features
@@ -61,6 +61,7 @@ print(f"Class weights from distribution_ratio5.json: {class_weights}\n")
 
 # --------------------------------------------------------------
 # Model
+
 class LogisticRegression(nn.Module):
     def __init__(self, n_features):
         super().__init__()
@@ -145,13 +146,14 @@ for epoch in range(1, max_epochs + 1):
 
 # --------------------------------------------------------------
 # Restore best model (best validation ROC-AUC), then test ONCE
+
 if best_state_dict is not None:
     model.load_state_dict(best_state_dict)
 
 model.eval()
 with torch.no_grad():
     y_pred_proba = model(X_test_tensor).cpu().numpy()
-    y_pred = (y_pred_proba >= 0.5).astype(int)
+    y_pred = (y_pred_proba >= 0.42).astype(int)
 
 accuracy = accuracy_score(y_test, y_pred)
 recall = recall_score(y_test, y_pred, zero_division=0)

@@ -6,7 +6,7 @@ INPUT_PATH = "dataset/fraud_oracle_preprocessed.csv"
 OUTPUT_DATASET_DIR = "dataset"
 OUTPUT_JSON_DIR = "json"
 
-TARGET_RATIO = 5   # valid : fraud ratio (e.g., 5 = 5:1)
+TARGET_RATIO = 3   # valid : fraud ratio (e.g., 5 = 5:1)
 TARGET_COL = "FraudFound_P"
 RANDOM_STATE = 42
 
