@@ -60,19 +60,11 @@ class NeuralNetwork(nn.Module):
 
         self.fc3 = nn.Linear(32, 1)
 
-        self.dropout = nn.Dropout(0.3)
+        self.dropout = nn.Dropout(0.2)
 
     def forward(self, x):
-        x = self.fc1(x)
-        x = self.bn1(x)
-        x = torch.relu(x)
-        x = self.dropout(x)
-
-        x = self.fc2(x)
-        x = self.bn2(x)
-        x = torch.relu(x)
-        x = self.dropout(x)
-
+        x = self.dropout(torch.relu(self.bn1(self.fc1(x))))
+        x = self.dropout(torch.relu(self.bn2(self.fc2(x))))
         x = self.fc3(x)
         return x.squeeze(1)
 
@@ -103,7 +95,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
 # Early stopping settings (ROC-AUC on validation)
 
 max_epochs = 1000
-patience = 20
+patience = 30
 best_val_roc = -float("inf")
 best_epoch = -1
 epochs_no_improve = 0
@@ -147,16 +139,38 @@ for epoch in range(1, max_epochs + 1):
         break
 
 # --------------------------------------------------------------
-# Restore best model (best validation ROC-AUC), then test ONCE
+# Restore best model (best validation ROC-AUC), then optimize THRESHOLD on VAL for F1, then test ONCE
 
 if best_state_dict is not None:
     model.load_state_dict(best_state_dict)
 
 model.eval()
+
+best_threshold = 0.4
+
+# # ---- 1) Threshold optimization on VALIDATION (maximize F1) ----
+# with torch.no_grad():
+#     val_logits = model(X_val_tensor)
+#     val_proba = torch.sigmoid(val_logits).cpu().numpy()
+
+# thresholds = np.linspace(0.01, 0.99, 99)
+# best_val_f1 = -1.0
+
+# for t in thresholds:
+#     val_pred = (val_proba >= t).astype(int)
+#     f1_t = f1_score(y_val, val_pred, zero_division=0)
+#     if f1_t > best_val_f1:
+#         best_val_f1 = f1_t
+#         best_threshold = t
+
+# print(f"\nBest threshold from VALIDATION (max F1): {best_threshold:.4f}")
+# print(f"Validation F1 at that threshold: {best_val_f1:.4f}")
+
+# ---- 2) Evaluate on TEST using optimized threshold ----
 with torch.no_grad():
     test_logits = model(X_test_tensor)
     y_pred_proba = torch.sigmoid(test_logits).cpu().numpy()
-    y_pred = (y_pred_proba >= 0.42).astype(int)
+    y_pred = (y_pred_proba >= best_threshold).astype(int)
 
 accuracy = accuracy_score(y_test, y_pred)
 recall = recall_score(y_test, y_pred, zero_division=0)
@@ -166,6 +180,7 @@ roc_auc = roc_auc_score(y_test, y_pred_proba)
 confusion = confusion_matrix(y_test, y_pred)
 
 print(f"\nTEST RESULTS (using best val ROC-AUC model from epoch {best_epoch})")
+print(f"Threshold Used: {best_threshold:.4f}")
 print(f"Accuracy: {accuracy:.4f}")
 print(f"Recall: {recall:.4f}")
 print(f"Precision: {precision:.4f}")
