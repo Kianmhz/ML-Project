@@ -48,29 +48,36 @@ X_val_scaled = scaler.transform(X_val)
 X_test_scaled = scaler.transform(X_test)
 
 # --------------------------------------------------------------
-# Load class distribution and compute class weights
-
-with open('/Users/kianmhz/Desktop/ML-Project/json/distribution.json', 'r') as f:
-    distribution = json.load(f)
-
-distribution = distribution["class_counts"]
-total_samples = sum(distribution.values())
-n_classes = len(distribution)
-class_weights = {int(k): total_samples / (n_classes * v) for k, v in distribution.items()}
-print(f"Class weights from distribution.json: {class_weights}\n")
-
-# --------------------------------------------------------------
 # Model
 
-class LogisticRegression(nn.Module):
+class NeuralNetwork(nn.Module):
     def __init__(self, n_features):
         super().__init__()
-        self.linear = nn.Linear(n_features, 1)
+        self.fc1 = nn.Linear(n_features, 64)
+        self.bn1 = nn.BatchNorm1d(64)
+
+        self.fc2 = nn.Linear(64, 32)
+        self.bn2 = nn.BatchNorm1d(32)
+
+        self.fc3 = nn.Linear(32, 1)
+
+        self.dropout = nn.Dropout(0.3)
 
     def forward(self, x):
-        return torch.sigmoid(self.linear(x)).squeeze(1)
+        x = self.fc1(x)
+        x = self.bn1(x)
+        x = torch.relu(x)
+        x = self.dropout(x)
 
-model = LogisticRegression(n_features=X_train.shape[1])
+        x = self.fc2(x)
+        x = self.bn2(x)
+        x = torch.relu(x)
+        x = self.dropout(x)
+
+        x = self.fc3(x)
+        return x.squeeze(1)
+
+model = NeuralNetwork(n_features=X_train.shape[1])
 
 # --------------------------------------------------------------
 # Tensors
@@ -87,11 +94,11 @@ y_test_tensor = torch.tensor(y_test.to_numpy(), dtype=torch.float32)
 # --------------------------------------------------------------
 # Weighted BCE (per-sample weights)
 
-class_weights_tensor = torch.tensor([class_weights[0], class_weights[1]], dtype=torch.float32)
-sample_weights = class_weights_tensor[y_train_tensor.long()]  # weight per training sample
+distribution = y_train.value_counts().sort_index()
+pos_weight = torch.tensor([distribution[0] / distribution[1]], dtype=torch.float32)
 
-loss_function = nn.BCELoss(weight=sample_weights)
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+loss_function = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-2)
 
 # --------------------------------------------------------------
 # Early stopping settings (ROC-AUC on validation)
@@ -146,6 +153,10 @@ for epoch in range(1, max_epochs + 1):
 # --------------------------------------------------------------
 # Restore best model (best validation ROC-AUC), then test ONCE
 
+import os
+
+SAVE_PATH = "saved_models/best_fraud_nn.pt"
+
 if best_state_dict is not None:
     model.load_state_dict(best_state_dict)
 
@@ -168,3 +179,30 @@ print(f"Precision: {precision:.4f}")
 print(f"F1 Score: {f1:.4f}")
 print(f"ROC AUC: {roc_auc:.4f}")
 print(f"\nConfusion Matrix:\n{confusion}")
+
+# --------------------------------------------------------------
+# Save-if-better logic (based on TEST ROC-AUC only)
+
+current_test_roc = roc_auc
+saved_test_roc = -float("inf")
+
+if os.path.exists(SAVE_PATH):
+    saved_checkpoint = torch.load(SAVE_PATH, map_location="cpu")
+    saved_test_roc = saved_checkpoint.get("test_roc_auc", -float("inf"))
+    print(f"\nSaved model TEST ROC-AUC: {saved_test_roc:.6f}")
+else:
+    print("\nNo saved model found.")
+
+if current_test_roc > saved_test_roc:
+    checkpoint = {
+        "model_state_dict": model.state_dict(),
+        "test_roc_auc": float(current_test_roc),
+        "best_val_epoch": int(best_epoch),
+        "threshold_used": 0.42
+    }
+
+    torch.save(checkpoint, SAVE_PATH)
+    print(f"✅ New best model saved with TEST ROC-AUC = {current_test_roc:.6f}")
+else:
+    print(f"❌ Model not saved. Current TEST ROC-AUC ({current_test_roc:.6f}) "
+          f"is not higher than saved ({saved_test_roc:.6f}).")

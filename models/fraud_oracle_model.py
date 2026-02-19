@@ -22,20 +22,20 @@ except ImportError:
     print("XGBoost not available. Install with: pip install xgboost")
 
 # Load class distribution and compute class weights
-with open('/Users/kianmhz/Desktop/ML-Project/distribution_oracle.json', 'r') as f:
+with open('/Users/kianmhz/Desktop/ML-Project/json/distribution.json', 'r') as f:
     distribution = json.load(f)
 
 # Compute class weights: total_samples / (n_classes * class_count)
 total_samples = sum(distribution.values())
 n_classes = len(distribution)
 class_weights = {int(k): total_samples / (n_classes * v) for k, v in distribution.items()}
-print(f"Class weights from distribution_oracle.json: {class_weights}")
+print(f"Class weights from distribution.json: {class_weights}")
 
 # ============================================================
 # LOAD PREPROCESSED DATA
 # ============================================================
 
-df = pd.read_csv('/Users/kianmhz/Desktop/ML-Project/fraud_oracle_preprocessed.csv')
+df = pd.read_csv('/Users/kianmhz/Desktop/ML-Project/dataset/fraud_oracle_preprocessed.csv')
 
 print("=" * 60)
 print("FRAUD ORACLE - DETECTION MODEL")
