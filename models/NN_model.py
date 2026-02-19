@@ -4,7 +4,6 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import numpy as np
-import json
 from sklearn.metrics import accuracy_score, recall_score, precision_score, f1_score, roc_auc_score, confusion_matrix
 
 # Importing Dataset
@@ -98,7 +97,7 @@ distribution = y_train.value_counts().sort_index()
 pos_weight = torch.tensor([distribution[0] / distribution[1]], dtype=torch.float32)
 
 loss_function = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
-optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-2)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
 
 # --------------------------------------------------------------
 # Early stopping settings (ROC-AUC on validation)
@@ -123,12 +122,9 @@ for epoch in range(1, max_epochs + 1):
     # ---- validate each epoch ----
     model.eval()
     with torch.no_grad():
-        val_proba = model(X_val_tensor).cpu().numpy()
-
-        try:
-            val_roc = roc_auc_score(y_val, val_proba)
-        except ValueError:
-            val_roc = float("nan")
+        val_logits = model(X_val_tensor)
+        val_proba = torch.sigmoid(val_logits).cpu().numpy()
+        val_roc = roc_auc_score(y_val, val_proba)
 
     # print progress occasionally (or every epoch if you want)
     if epoch == 1 or epoch % 10 == 0:
@@ -153,16 +149,13 @@ for epoch in range(1, max_epochs + 1):
 # --------------------------------------------------------------
 # Restore best model (best validation ROC-AUC), then test ONCE
 
-import os
-
-SAVE_PATH = "saved_models/best_fraud_nn.pt"
-
 if best_state_dict is not None:
     model.load_state_dict(best_state_dict)
 
 model.eval()
 with torch.no_grad():
-    y_pred_proba = model(X_test_tensor).cpu().numpy()
+    test_logits = model(X_test_tensor)
+    y_pred_proba = torch.sigmoid(test_logits).cpu().numpy()
     y_pred = (y_pred_proba >= 0.42).astype(int)
 
 accuracy = accuracy_score(y_test, y_pred)
@@ -179,30 +172,3 @@ print(f"Precision: {precision:.4f}")
 print(f"F1 Score: {f1:.4f}")
 print(f"ROC AUC: {roc_auc:.4f}")
 print(f"\nConfusion Matrix:\n{confusion}")
-
-# --------------------------------------------------------------
-# Save-if-better logic (based on TEST ROC-AUC only)
-
-current_test_roc = roc_auc
-saved_test_roc = -float("inf")
-
-if os.path.exists(SAVE_PATH):
-    saved_checkpoint = torch.load(SAVE_PATH, map_location="cpu")
-    saved_test_roc = saved_checkpoint.get("test_roc_auc", -float("inf"))
-    print(f"\nSaved model TEST ROC-AUC: {saved_test_roc:.6f}")
-else:
-    print("\nNo saved model found.")
-
-if current_test_roc > saved_test_roc:
-    checkpoint = {
-        "model_state_dict": model.state_dict(),
-        "test_roc_auc": float(current_test_roc),
-        "best_val_epoch": int(best_epoch),
-        "threshold_used": 0.42
-    }
-
-    torch.save(checkpoint, SAVE_PATH)
-    print(f"✅ New best model saved with TEST ROC-AUC = {current_test_roc:.6f}")
-else:
-    print(f"❌ Model not saved. Current TEST ROC-AUC ({current_test_roc:.6f}) "
-          f"is not higher than saved ({saved_test_roc:.6f}).")

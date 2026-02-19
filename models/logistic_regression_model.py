@@ -48,18 +48,6 @@ X_val_scaled = scaler.transform(X_val)
 X_test_scaled = scaler.transform(X_test)
 
 # --------------------------------------------------------------
-# Load class distribution and compute class weights
-
-with open('/Users/kianmhz/Desktop/ML-Project/json/distribution.json', 'r') as f:
-    distribution = json.load(f)
-
-distribution = distribution["class_counts"]
-total_samples = sum(distribution.values())
-n_classes = len(distribution)
-class_weights = {int(k): total_samples / (n_classes * v) for k, v in distribution.items()}
-print(f"Class weights from distribution.json: {class_weights}\n")
-
-# --------------------------------------------------------------
 # Model
 
 class LogisticRegression(nn.Module):
@@ -68,7 +56,7 @@ class LogisticRegression(nn.Module):
         self.linear = nn.Linear(n_features, 1)
 
     def forward(self, x):
-        return torch.sigmoid(self.linear(x)).squeeze(1)
+        return self.linear(x).squeeze(1)
 
 model = LogisticRegression(n_features=X_train.shape[1])
 
@@ -87,10 +75,10 @@ y_test_tensor = torch.tensor(y_test.to_numpy(), dtype=torch.float32)
 # --------------------------------------------------------------
 # Weighted BCE (per-sample weights)
 
-class_weights_tensor = torch.tensor([class_weights[0], class_weights[1]], dtype=torch.float32)
-sample_weights = class_weights_tensor[y_train_tensor.long()]  # weight per training sample
+distribution = y_train.value_counts().sort_index()
+pos_weight = torch.tensor([distribution[0] / distribution[1]], dtype=torch.float32)
 
-loss_function = nn.BCELoss(weight=sample_weights)
+loss_function = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
 # --------------------------------------------------------------
@@ -116,7 +104,9 @@ for epoch in range(1, max_epochs + 1):
     # ---- validate each epoch ----
     model.eval()
     with torch.no_grad():
-        val_proba = model(X_val_tensor).cpu().numpy()
+        val_logits = model(X_val_tensor)
+        val_proba = torch.sigmoid(val_logits).cpu().numpy()
+        val_roc = roc_auc_score(y_val, val_proba)
 
         try:
             val_roc = roc_auc_score(y_val, val_proba)
@@ -151,7 +141,8 @@ if best_state_dict is not None:
 
 model.eval()
 with torch.no_grad():
-    y_pred_proba = model(X_test_tensor).cpu().numpy()
+    test_logits = model(X_test_tensor)
+    y_pred_proba = torch.sigmoid(test_logits).cpu().numpy()
     y_pred = (y_pred_proba >= 0.42).astype(int)
 
 accuracy = accuracy_score(y_test, y_pred)
