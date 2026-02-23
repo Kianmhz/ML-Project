@@ -152,9 +152,9 @@ for name, model in models.items():
     
     # Calculate metrics
     accuracy = accuracy_score(y_test, y_pred)
-    precision = precision_score(y_test, y_pred)
-    recall = recall_score(y_test, y_pred)
-    f1 = f1_score(y_test, y_pred)
+    precision = precision_score(y_test, y_pred, zero_division=0)
+    recall = recall_score(y_test, y_pred, zero_division=0)
+    f1 = f1_score(y_test, y_pred, zero_division=0)
     roc_auc = roc_auc_score(y_test, y_prob)
     avg_precision = average_precision_score(y_test, y_prob)
     
@@ -174,6 +174,15 @@ for name, model in models.items():
     print(f"  F1-Score: {f1:.4f}")
     print(f"  ROC-AUC: {roc_auc:.4f}")
     print(f"  Avg Precision: {avg_precision:.4f}")
+
+    # Confusion Matrix (per model)
+    cm = confusion_matrix(y_test, y_pred)
+    tn, fp, fn, tp = cm.ravel()
+
+    print("\n  Confusion Matrix:")
+    print(cm)
+    print(f"  TN={tn}  FP={fp}  FN={fn}  TP={tp}")
+
 
 # ============================================================
 # BEST MODEL ANALYSIS
