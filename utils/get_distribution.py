@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import os
 
 def check_distribution(dataset_path, json_path, target_col):
     # Load dataset
@@ -16,4 +17,8 @@ def check_distribution(dataset_path, json_path, target_col):
     print(distribution)
 
 
-check_distribution("dataset/fraud_oracle.csv", "json/distribution.json", "FraudFound_P")
+if __name__ == "__main__":
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    dataset_path = os.path.join(base_dir, "dataset", "fraud_oracle_preprocessed.csv")
+    json_path = os.path.join(base_dir, "json", "distribution.json")
+    check_distribution(dataset_path, json_path, "FraudFound_P")

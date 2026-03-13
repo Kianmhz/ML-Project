@@ -1,11 +1,17 @@
 import pandas as pd
 import numpy as np
+import os
 
 # ============================================================
 # LOAD DATA
 # ============================================================
 
-df = pd.read_csv('/Users/kianmhz/Desktop/ML-Project/fraud_oracle.csv')
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+raw_path = os.path.join(base_dir, 'dataset', 'fraud_oracle.csv')
+output_dataset_path = os.path.join(base_dir, 'dataset', 'fraud_oracle_preprocessed.csv')
+output_distribution_path = os.path.join(base_dir, 'json', 'distribution_oracle.json')
+
+df = pd.read_csv(raw_path)
 
 print("=" * 60)
 print("FRAUD ORACLE DATA - PREPROCESSING")
@@ -48,11 +54,17 @@ print("=" * 60)
 # 1. Convert categorical ordinal features to numerical
 
 # Age mapping
+# Raw Age is numeric in this dataset; map ranges only as fallback for robustness.
 age_mapping = {
-    '0': 0, '16 to 17': 16.5, '18 to 20': 19, '21 to 25': 23, '26 to 30': 28,
+    '16 to 17': 16.5, '18 to 20': 19, '21 to 25': 23, '26 to 30': 28,
     '31 to 35': 33, '36 to 40': 38, '41 to 50': 45.5, '51 to 65': 58, 'over 65': 70
 }
-df['Age_Numeric'] = df['Age'].map(age_mapping).fillna(df['Age'].apply(lambda x: 0 if x == '0' else 35))
+age_numeric_raw = pd.to_numeric(df['Age'], errors='coerce')
+if age_numeric_raw.notna().sum() > 0:
+    age_numeric_raw = age_numeric_raw.replace(0, np.nan)
+    df['Age_Numeric'] = age_numeric_raw.fillna(age_numeric_raw.median())
+else:
+    df['Age_Numeric'] = df['Age'].astype(str).map(age_mapping).fillna(35)
 print("Added: Age_Numeric")
 
 # AgeOfPolicyHolder mapping
@@ -142,6 +154,8 @@ print("Added: PolicyHolder_Driver_Age_Diff")
 
 # Days between accident and claim
 df['Days_Accident_to_Claim'] = df['DaysPolicyClaim_Numeric'] - df['DaysPolicyAccident_Numeric']
+# Negative delay is invalid; clamp to zero.
+df['Days_Accident_to_Claim'] = df['Days_Accident_to_Claim'].clip(lower=0)
 print("Added: Days_Accident_to_Claim")
 
 # Risk indicators
@@ -241,9 +255,10 @@ final_columns = ['FraudFound_P'] + numerical_features + categorical_features
 df_processed = df[[col for col in final_columns if col in df.columns]]
 
 # Save
-df_processed.to_csv('/Users/kianmhz/Desktop/ML-Project/fraud_oracle_preprocessed.csv', index=False)
+os.makedirs(os.path.dirname(output_dataset_path), exist_ok=True)
+df_processed.to_csv(output_dataset_path, index=False)
 
-print(f"\nPreprocessed data saved: fraud_oracle_preprocessed.csv")
+print(f"\nPreprocessed data saved: {output_dataset_path}")
 print(f"Final shape: {df_processed.shape}")
 print(f"\nFinal columns: {list(df_processed.columns)}")
 
@@ -259,7 +274,8 @@ print(df_processed.head())
 import json
 
 distribution = df_processed['FraudFound_P'].value_counts().to_dict()
-with open('/Users/kianmhz/Desktop/ML-Project/distribution_oracle.json', 'w') as f:
+os.makedirs(os.path.dirname(output_distribution_path), exist_ok=True)
+with open(output_distribution_path, 'w') as f:
     json.dump(distribution, f)
-print(f"\nClass distribution saved to distribution_oracle.json")
+print(f"\nClass distribution saved to {output_distribution_path}")
 print(f"Distribution: {distribution}")
