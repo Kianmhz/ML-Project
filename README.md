@@ -1,6 +1,6 @@
 # Fraud Detection using Machine Learning
 
-A machine learning project that detects automobile insurance fraud using Logistic Regression and Neural Network models built with PyTorch. The project investigates the effect of downsampling the majority class on model performance across three dataset configurations.
+A machine learning project comparing supervised and unsupervised fraud detection across two datasets: automobile insurance claims (Fraud Oracle) and Medicare provider billing (Healthcare Fraud). Models include Logistic Regression, Neural Network, XGBoost, and Isolation Forest.
 
 ---
 
@@ -9,159 +9,146 @@ A machine learning project that detects automobile insurance fraud using Logisti
 ```
 ML-Project/
 ├── dataset/
-│   ├── fraud_oracle.csv                        # Raw dataset
-│   ├── fraud_oracle_preprocessed.csv           # Preprocessed (no downsampling)
-│   ├── fraud_oracle_preprocessed_ratio5.csv    # Downsampled 5:1 (valid:fraud)
-│   └── fraud_oracle_preprocessed_ratio3.csv    # Downsampled 3:1 (valid:fraud)
+│   ├── fraud_oracle.csv                         # Raw Oracle dataset
+│   ├── fraud_oracle_preprocessed.csv            # Preprocessed Oracle dataset
+│   └── healthcare_fraud/
+│       ├── Train-1542865627584.csv              # Provider fraud labels
+│       ├── Train_Beneficiarydata-1542865627584.csv
+│       ├── Train_Inpatientdata-1542865627584.csv
+│       └── Train_Outpatientdata-1542865627584.csv
+│   └── healthcare_fraud_preprocessed.csv        # Aggregated provider-level dataset
 ├── models/
-│   ├── logistic_regression_model.py            # PyTorch Logistic Regression
-│   ├── NN_model.py                             # PyTorch Neural Network (2 hidden layers)
-│   └── fraud_oracle_model.py                   # Sklearn multi-model baseline (RF, XGBoost, etc.)
+│   ├── logistic_regression_model.py             # Oracle — Logistic Regression
+│   ├── NN_model.py                              # Oracle — Neural Network
+│   ├── xgboost_model.py                         # Oracle — XGBoost (k-fold tuned)
+│   ├── unsupervised_model.py                    # Oracle — Isolation Forest + Autoencoder
+│   ├── logistic_regression_healthcare.py        # Healthcare — Logistic Regression
+│   ├── NN_healthcare.py                         # Healthcare — Neural Network (k-fold tuned)
+│   ├── xgboost_healthcare.py                    # Healthcare — XGBoost (k-fold tuned)
+│   └── unsupervised_healthcare.py               # Healthcare — Isolation Forest
 ├── utils/
-│   ├── preprocess_fraud_oracle.py              # Feature engineering & preprocessing
-│   ├── downscale.py                            # Majority-class downsampling utility
-│   └── get_distribution.py                     # Class distribution extraction
-├── results/
-│   └── comparison_results.txt                  # Full comparison output
-├── run_all_models.py                           # Unified script to train & compare all models
+│   ├── preprocess_fraud_oracle.py               # Oracle feature engineering
+│   ├── preprocess_healthcare_fraud.py           # Healthcare join + aggregation pipeline
+│   ├── downscale.py                             # Majority-class downsampling utility
+│   └── get_distribution.py                      # Class distribution extraction
+├── json/
+│   ├── distribution_oracle.json
+│   └── distribution_healthcare.json
+├── fraud_oracle_results.txt                     # Full Oracle results for all models
+├── run_oracle_results.py                        # Runs all Oracle models, saves results
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## Dataset
+## Datasets
 
-The project uses the **Vehicle Insurance Fraud Detection** dataset (`fraud_oracle.csv`) containing **15,420 insurance claims** with a binary target `FraudFound_P` indicating whether the claim was fraudulent.
+### 1. Fraud Oracle — Vehicle Insurance Claims
 
-- **Fraud rate:** ~6% (highly imbalanced)
-- **Features:** Demographics, policy details, vehicle attributes, claim circumstances
+**Source:** Vehicle Insurance Fraud Detection dataset
+**Rows:** 15,420 insurance claims | **Target:** `FraudFound_P` (binary)
+**Fraud rate:** ~6% (highly imbalanced)
 
-### Preprocessing (`utils/preprocess_fraud_oracle.py`)
+**Preprocessing** (`utils/preprocess_fraud_oracle.py`):
+- Ordinal string ranges (age, price, vehicle age) mapped to numeric midpoints
+- Cyclical sin/cos encoding for month and day-of-week features
+- Derived features: `Driver_Vehicle_Age_Diff`, `Days_Accident_to_Claim`, `Claim_Before_Accident`, `Has_Past_Claims`, `Young_Driver`, `High_Value_Vehicle`
+- Binary encoding for `PoliceReportFiled`, `WitnessPresent`
+- Rep-level claim count (`Rep_Claim_Count`) as a network frequency feature
+- Redundant binary flags removed (duplicates of categorical columns)
 
-- Converts ordinal categorical features (age ranges, price brackets) to numeric midpoints
-- Engineers new features: `Driver_Vehicle_Age_Diff`, `Days_Accident_to_Claim`, `Has_Past_Claims`, `Young_Driver`, `High_Value_Vehicle`, etc.
-- Encodes binary indicators for `PoliceReportFiled`, `WitnessPresent`, and temporal flags
-- Drops redundant original columns after transformation
+### 2. Healthcare Fraud — Medicare Provider Billing
 
-### Downsampling (`utils/downscale.py`)
+**Source:** Medicare Provider Fraud Detection dataset (Kaggle)
+**Structure:** 4 relational CSV files joined by foreign keys
 
-To address class imbalance, majority-class samples are randomly downsampled to create balanced datasets:
+| File | Rows | Description |
+|------|-----:|-------------|
+| Train labels | 5,410 | Provider ID + `PotentialFraud` (Yes/No) |
+| Beneficiary data | 138,556 | Patient demographics, chronic conditions |
+| Inpatient claims | 40,474 | Hospital admissions with diagnosis/procedure codes |
+| Outpatient claims | 517,737 | Outpatient visits with diagnosis codes |
 
-| Dataset | Valid:Fraud Ratio | Total Samples |
-|---------|:-----------------:|:-------------:|
-| No Downsampling | ~15:1 | 15,420 |
-| 5:1 Ratio | 5:1 | 5,538 |
-| 3:1 Ratio | 3:1 | 3,692 |
+**Fraud rate:** ~9.4% | **Target:** Provider-level fraud (one row per provider)
+
+**Preprocessing** (`utils/preprocess_healthcare_fraud.py`):
+
+The multi-file structure is handled as a relational join pipeline:
+1. **Beneficiary engineering** — compute patient age from DOB, recode chronic conditions (1/2 → 1/0), flag deceased patients
+2. **Claim-level engineering** — compute `ClaimDuration`, `HospitalStay`, `DiagnosisCount`, `ProcedureCount`, `SamePhysician` (self-referral flag)
+3. **JOIN** — attach beneficiary demographics to each claim via `BeneID`
+4. **GROUP BY Provider** — aggregate all claims into one row per provider with 40 features
+
+Key aggregated features include:
+- Volume: `total_claims`, `ip_ratio`, `claims_per_bene`, `unique_benes`
+- Billing: `total_reimbursed`, `avg_claim_reimbursed`, `max_claim_reimbursed`
+- Temporal: `avg_claim_duration`, `avg_hospital_stay`, `max_hospital_stay`
+- Network: `unique_attending`, `pct_same_physician`, `physicians_per_bene`
+- Patient profile: `avg_bene_age`, `avg_chronic_count`, `pct_deceased`, per-condition prevalence rates
 
 ---
 
 ## Models
 
-### Logistic Regression (PyTorch)
+### Supervised
 
-- Single linear layer with sigmoid activation
-- Weighted BCE loss (`pos_weight` based on class ratio)
-- Adam optimizer (lr=0.001)
-- Early stopping on validation ROC-AUC (patience=20)
-- Decision threshold: 0.42
+| Model | Key Details |
+|-------|-------------|
+| **Logistic Regression** | PyTorch linear layer, weighted BCE loss, Adam optimizer, early stopping on val ROC-AUC |
+| **Neural Network** | Variable architecture (k-fold tuned), BatchNorm + Dropout, weighted BCE, early stopping on val F1 |
+| **XGBoost** | `binary:logistic`, `scale_pos_weight`, k-fold hyperparameter tuning optimised for F1, two evaluation thresholds |
 
-### Neural Network (PyTorch)
+### Unsupervised
 
-- Architecture: `Input → 64 (BN + ReLU + Dropout) → 32 (BN + ReLU + Dropout) → 1`
-- BatchNorm + Dropout (0.2) for regularization
-- Weighted BCE loss with Adam optimizer (lr=0.001, weight_decay=1e-4)
-- Early stopping on validation ROC-AUC (patience=30)
-- Decision threshold: 0.40
+| Model | Key Details |
+|-------|-------------|
+| **Isolation Forest** | Trained on non-fraud samples only, `contamination` set to dataset fraud rate, anomaly score = `-score_samples` |
+| **Autoencoder** | PyTorch encoder-decoder trained on non-fraud; reconstruction error = anomaly score (Oracle only — underperformed on healthcare) |
 
 ### Training Protocol
 
-- **Split:** 72% train / 8% validation / 20% test (stratified)
-- **Scaling:** StandardScaler on all features
-- **Early stopping:** Monitors validation ROC-AUC, restores best checkpoint
+- **Split:** 80% train+val / 20% test (stratified), held-out test never used during tuning
+- **Scaling:** `StandardScaler` fit on training fold only, applied to val/test
+- **Class imbalance:** `pos_weight = n_neg / n_pos` in BCE loss; `scale_pos_weight` in XGBoost
+- **Thresholds:** Two thresholds evaluated — max F1 and recall-priority (≥0.91 recall, max precision)
+- **Target encoding** (Oracle XGBoost): `Rep_Fraud_Rate`, `Make_Fraud_Rate`, `PolicyType_Fraud_Rate` computed on training fold only inside each CV fold to prevent leakage
 
 ---
 
 ## Results
 
-### Comparison Table
+### Fraud Oracle Dataset
 
-| Dataset | Model | Accuracy | Recall | Precision | F1 Score | ROC-AUC |
-|---------|-------|:--------:|:------:|:---------:|:--------:|:-------:|
-| No Downsampling | Logistic Regression | 0.5973 | 0.9297 | 0.1228 | 0.2169 | 0.7887 |
-| No Downsampling | Neural Network | 0.5979 | 0.9405 | 0.1240 | 0.2191 | 0.8037 |
-| 5:1 Ratio | Logistic Regression | 0.6137 | 0.9405 | 0.2944 | 0.4485 | 0.7820 |
-| 5:1 Ratio | Neural Network | 0.6814 | 0.8162 | 0.3213 | 0.4611 | 0.8022 |
-| 3:1 Ratio | Logistic Regression | 0.6333 | 0.9243 | 0.3995 | 0.5579 | 0.7661 |
-| 3:1 Ratio | Neural Network | 0.6847 | 0.8486 | 0.4337 | 0.5740 | 0.7944 |
+| Model | ROC AUC | F1 (max) | Recall (recall-priority) |
+|-------|:-------:|:--------:|:------------------------:|
+| Logistic Regression | 0.783 | 0.212 | 0.935 |
+| Neural Network | 0.810 | 0.274 | — |
+| XGBoost | **0.848** | **0.284** | **0.946** |
+| Isolation Forest (unsupervised) | 0.507 | 0.121 | 0.995 |
 
-### Confusion Matrices
+### Healthcare Fraud Dataset
 
-#### No Downsampling
-
-**Logistic Regression**
-|  | Predicted 0 | Predicted 1 |
-|--|:-----------:|:-----------:|
-| **Actual 0** | 1670 | 1229 |
-| **Actual 1** | 13 | 172 |
-
-> TN=1670, FP=1229, FN=13, TP=172
-
-**Neural Network**
-|  | Predicted 0 | Predicted 1 |
-|--|:-----------:|:-----------:|
-| **Actual 0** | 1670 | 1229 |
-| **Actual 1** | 11 | 174 |
-
-> TN=1670, FP=1229, FN=11, TP=174
-
-#### 5:1 Ratio (Downsampled)
-
-**Logistic Regression**
-|  | Predicted 0 | Predicted 1 |
-|--|:-----------:|:-----------:|
-| **Actual 0** | 506 | 417 |
-| **Actual 1** | 11 | 174 |
-
-> TN=506, FP=417, FN=11, TP=174
-
-**Neural Network**
-|  | Predicted 0 | Predicted 1 |
-|--|:-----------:|:-----------:|
-| **Actual 0** | 604 | 319 |
-| **Actual 1** | 34 | 151 |
-
-> TN=604, FP=319, FN=34, TP=151
-
-#### 3:1 Ratio (Downsampled)
-
-**Logistic Regression**
-|  | Predicted 0 | Predicted 1 |
-|--|:-----------:|:-----------:|
-| **Actual 0** | 297 | 257 |
-| **Actual 1** | 14 | 171 |
-
-> TN=297, FP=257, FN=14, TP=171
-
-**Neural Network**
-|  | Predicted 0 | Predicted 1 |
-|--|:-----------:|:-----------:|
-| **Actual 0** | 349 | 205 |
-| **Actual 1** | 28 | 157 |
-
-> TN=349, FP=205, FN=28, TP=157
+| Model | ROC AUC | F1 (max) | Recall (recall-priority) |
+|-------|:-------:|:--------:|:------------------------:|
+| Logistic Regression | 0.958 | 0.654 | 0.921 |
+| Neural Network | 0.965 | 0.673 | 0.911 |
+| XGBoost | **0.970** | **0.711** | **0.980** |
+| Isolation Forest (unsupervised) | 0.891 | 0.485 | 0.911 |
 
 ### Key Findings
 
-1. **Downsampling significantly improves F1 score.** Without downsampling, both models achieve very high recall (~93-94%) but extremely low precision (~12%), resulting in F1 around 0.22. With 3:1 downsampling, F1 improves to 0.56-0.57 — a **2.6× improvement**.
+1. **Dataset quality dominates model choice.** Switching from Fraud Oracle to the Healthcare dataset improved XGBoost ROC AUC from 0.848 → 0.970 and F1 from 0.28 → 0.71 — a larger gain than any model or tuning improvement applied to Oracle.
 
-2. **Neural Network consistently outperforms Logistic Regression** in ROC-AUC across all dataset configurations (0.80 vs 0.79 on full, 0.80 vs 0.78 on 5:1, 0.79 vs 0.77 on 3:1), indicating better overall discriminative ability.
+2. **Fraud Oracle hit a structural ceiling.** All supervised models clustered between 0.78–0.85 ROC AUC regardless of architecture or tuning. The dataset lacks linking IDs across claims, preventing temporal and network feature engineering.
 
-3. **Downsampling trades recall for precision.** The 3:1 ratio Neural Network reduces recall from 0.94 to 0.85 but improves precision from 0.12 to 0.43 — a much better precision-recall balance for practical fraud detection.
+3. **XGBoost consistently outperforms NNs on tabular data.** Tree models are optimised for row-level feature thresholds, which is how fraud manifests in structured records. The NN gap was smaller on the healthcare dataset (0.005 ROC AUC) than on Oracle (0.038), as richer features reduce the NN's relative disadvantage.
 
-4. **More aggressive downsampling (3:1) yields the best F1 scores** for both models, with the Neural Network at 3:1 achieving the best overall F1 of **0.5740**.
+4. **Unsupervised methods reflect the data's anomaly structure.** On Oracle, Isolation Forest ROC AUC was 0.507 (random) — fraud cases are not statistical outliers. On Healthcare, it achieved 0.891 — fraudulent providers genuinely bill anomalously. The unsupervised performance gap directly measures how "detectable without labels" the fraud is.
 
-5. **ROC-AUC remains relatively stable** across downsampling ratios, suggesting the models maintain their ranking ability regardless of class balance, while threshold-dependent metrics (precision, F1) benefit substantially from rebalancing.
+5. **Feature engineering from relational joins is the highest-leverage action.** `total_reimbursed` alone accounted for 30.8% of XGBoost feature importance on the healthcare dataset. This feature required joining 4 CSV files and aggregating 558k claims — it cannot be derived from a flat single-table dataset.
+
+6. **Class weights matter less when fraud is easier to separate.** On Healthcare (9.4% fraud rate, strong billing signals), removing `pos_weight` from Logistic Regression changed ROC AUC by only +0.003. On Oracle (6% fraud rate, weak signals), class weighting had a more meaningful impact.
 
 ---
 
@@ -170,41 +157,36 @@ To address class imbalance, majority-class samples are randomly downsampled to c
 ### Prerequisites
 
 ```bash
-pip install torch pandas numpy scikit-learn
+pip install -r requirements.txt
 ```
 
-### Run All Models & Compare
-
-```bash
-python run_all_models.py
-```
-
-This will:
-- Train Logistic Regression and Neural Network on all 3 dataset versions
-- Print a comparison table and confusion matrices
-- Save detailed results to `results/comparison_results.txt`
-
-### Run Individual Models
-
-```bash
-# Logistic Regression (update dataset path in the script first)
-python models/logistic_regression_model.py
-
-# Neural Network (update dataset path in the script first)
-python models/NN_model.py
-```
-
-### Preprocessing Pipeline
+### Fraud Oracle Pipeline
 
 ```bash
 # Step 1: Preprocess raw data
 python utils/preprocess_fraud_oracle.py
 
-# Step 2: Generate downsampled datasets
-python utils/downscale.py
+# Step 2: Run individual models
+python models/logistic_regression_model.py
+python models/NN_model.py
+python models/xgboost_model.py
+python models/unsupervised_model.py
 
-# Step 3: Check class distributions
-python utils/get_distribution.py
+# Step 3: Run all Oracle models and save results
+python run_oracle_results.py
+```
+
+### Healthcare Fraud Pipeline
+
+```bash
+# Step 1: Preprocess — joins 4 CSV files and aggregates to provider level
+python utils/preprocess_healthcare_fraud.py
+
+# Step 2: Run individual models
+python models/logistic_regression_healthcare.py
+python models/NN_healthcare.py
+python models/xgboost_healthcare.py
+python models/unsupervised_healthcare.py
 ```
 
 ---
@@ -216,3 +198,4 @@ python utils/get_distribution.py
 - pandas
 - NumPy
 - scikit-learn
+- xgboost
