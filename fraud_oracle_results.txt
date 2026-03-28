@@ -1,0 +1,320 @@
+======================================================================
+FRAUD ORACLE DATASET — MODEL RESULTS
+Generated: 2026-03-27 23:07:47
+======================================================================
+
+======================================================================
+MODEL: Logistic Regression
+======================================================================
+
+
+Training set: 11102 samples
+Validation set: 1234 samples
+Test set: 3084 samples
+
+Epoch   1 | Train Loss: 1.378322 | Val ROC-AUC: 0.481174
+Epoch  10 | Train Loss: 1.342713 | Val ROC-AUC: 0.523404
+Epoch  20 | Train Loss: 1.309762 | Val ROC-AUC: 0.565168
+Epoch  30 | Train Loss: 1.283092 | Val ROC-AUC: 0.600268
+Epoch  40 | Train Loss: 1.261104 | Val ROC-AUC: 0.628099
+Epoch  50 | Train Loss: 1.242464 | Val ROC-AUC: 0.649126
+Epoch  60 | Train Loss: 1.226404 | Val ROC-AUC: 0.664644
+Epoch  70 | Train Loss: 1.212422 | Val ROC-AUC: 0.675850
+Epoch  80 | Train Loss: 1.200114 | Val ROC-AUC: 0.685054
+Epoch  90 | Train Loss: 1.189153 | Val ROC-AUC: 0.692195
+Epoch 100 | Train Loss: 1.179281 | Val ROC-AUC: 0.698253
+Epoch 110 | Train Loss: 1.170299 | Val ROC-AUC: 0.704182
+Epoch 120 | Train Loss: 1.162044 | Val ROC-AUC: 0.709296
+Epoch 130 | Train Loss: 1.154388 | Val ROC-AUC: 0.714212
+Epoch 140 | Train Loss: 1.147233 | Val ROC-AUC: 0.718127
+Epoch 150 | Train Loss: 1.140501 | Val ROC-AUC: 0.721843
+Epoch 160 | Train Loss: 1.134135 | Val ROC-AUC: 0.725140
+Epoch 170 | Train Loss: 1.128088 | Val ROC-AUC: 0.728844
+Epoch 180 | Train Loss: 1.122326 | Val ROC-AUC: 0.732269
+Epoch 190 | Train Loss: 1.116822 | Val ROC-AUC: 0.734937
+Epoch 200 | Train Loss: 1.111552 | Val ROC-AUC: 0.737360
+Epoch 210 | Train Loss: 1.106499 | Val ROC-AUC: 0.739795
+Epoch 220 | Train Loss: 1.101648 | Val ROC-AUC: 0.742137
+Epoch 230 | Train Loss: 1.096986 | Val ROC-AUC: 0.744560
+Epoch 240 | Train Loss: 1.092502 | Val ROC-AUC: 0.746622
+Epoch 250 | Train Loss: 1.088187 | Val ROC-AUC: 0.748742
+Epoch 260 | Train Loss: 1.084030 | Val ROC-AUC: 0.750676
+Epoch 270 | Train Loss: 1.080025 | Val ROC-AUC: 0.752202
+Epoch 280 | Train Loss: 1.076165 | Val ROC-AUC: 0.753658
+Epoch 290 | Train Loss: 1.072442 | Val ROC-AUC: 0.755405
+Epoch 300 | Train Loss: 1.068850 | Val ROC-AUC: 0.756582
+Epoch 310 | Train Loss: 1.065384 | Val ROC-AUC: 0.757980
+Epoch 320 | Train Loss: 1.062038 | Val ROC-AUC: 0.759308
+Epoch 330 | Train Loss: 1.058808 | Val ROC-AUC: 0.760485
+Epoch 340 | Train Loss: 1.055688 | Val ROC-AUC: 0.761358
+Epoch 350 | Train Loss: 1.052674 | Val ROC-AUC: 0.762057
+Epoch 360 | Train Loss: 1.049762 | Val ROC-AUC: 0.762931
+Epoch 370 | Train Loss: 1.046947 | Val ROC-AUC: 0.763770
+Epoch 380 | Train Loss: 1.044225 | Val ROC-AUC: 0.764690
+Epoch 390 | Train Loss: 1.041594 | Val ROC-AUC: 0.765354
+Epoch 400 | Train Loss: 1.039050 | Val ROC-AUC: 0.766030
+Epoch 410 | Train Loss: 1.036588 | Val ROC-AUC: 0.766822
+Epoch 420 | Train Loss: 1.034207 | Val ROC-AUC: 0.767276
+Epoch 430 | Train Loss: 1.031902 | Val ROC-AUC: 0.767742
+Epoch 440 | Train Loss: 1.029671 | Val ROC-AUC: 0.768034
+Epoch 450 | Train Loss: 1.027512 | Val ROC-AUC: 0.768406
+Epoch 460 | Train Loss: 1.025421 | Val ROC-AUC: 0.768826
+Epoch 470 | Train Loss: 1.023397 | Val ROC-AUC: 0.769315
+Epoch 480 | Train Loss: 1.021436 | Val ROC-AUC: 0.769583
+Epoch 490 | Train Loss: 1.019536 | Val ROC-AUC: 0.769944
+Epoch 500 | Train Loss: 1.017696 | Val ROC-AUC: 0.770165
+Epoch 510 | Train Loss: 1.015912 | Val ROC-AUC: 0.770340
+Epoch 520 | Train Loss: 1.014183 | Val ROC-AUC: 0.770433
+Epoch 530 | Train Loss: 1.012508 | Val ROC-AUC: 0.770701
+Epoch 540 | Train Loss: 1.010883 | Val ROC-AUC: 0.770631
+Epoch 550 | Train Loss: 1.009308 | Val ROC-AUC: 0.771074
+Epoch 560 | Train Loss: 1.007780 | Val ROC-AUC: 0.771295
+Epoch 570 | Train Loss: 1.006298 | Val ROC-AUC: 0.771377
+Epoch 580 | Train Loss: 1.004861 | Val ROC-AUC: 0.771400
+Epoch 590 | Train Loss: 1.003466 | Val ROC-AUC: 0.771715
+Epoch 600 | Train Loss: 1.002113 | Val ROC-AUC: 0.771831
+Epoch 610 | Train Loss: 1.000800 | Val ROC-AUC: 0.771913
+Epoch 620 | Train Loss: 0.999526 | Val ROC-AUC: 0.772239
+Epoch 630 | Train Loss: 0.998289 | Val ROC-AUC: 0.772530
+Epoch 640 | Train Loss: 0.997088 | Val ROC-AUC: 0.772425
+
+Early stopping: no Val ROC-AUC improvement for 20 epochs.
+Best Val ROC-AUC: 0.772554 at epoch 626
+
+TEST RESULTS (using best val ROC-AUC model from epoch 626)
+Accuracy: 0.5830
+Recall: 0.9351
+Precision: 0.1196
+F1 Score: 0.2120
+ROC AUC: 0.7830
+
+Confusion Matrix:
+[[1625 1274]
+ [  12  173]]
+
+
+======================================================================
+MODEL: XGBoost
+======================================================================
+
+
+Training set: 11102 samples
+Validation set: 1234 samples
+Test set: 3084 samples
+
+Best iteration: 165
+Best validation ROC-AUC: 0.876514
+
+Best threshold from VALIDATION (max F1): 0.6881
+Validation F1 at that threshold: 0.4021
+
+Recall-priority threshold from VALIDATION (target recall >= 0.91): 0.3268
+Validation precision at recall-constrained threshold: 0.1402
+
+TEST RESULTS (XGBoost (max F1 threshold))
+Threshold Used: 0.6881
+Accuracy: 0.8787
+Recall: 0.4000
+Precision: 0.2196
+F1 Score: 0.2835
+F2 Score: 0.3435
+ROC AUC: 0.8477
+
+Confusion Matrix:
+[[2636  263]
+ [ 111   74]]
+
+TEST RESULTS (XGBoost (recall-priority threshold))
+Threshold Used: 0.3268
+Accuracy: 0.6398
+Recall: 0.9459
+Precision: 0.1371
+F1 Score: 0.2396
+F2 Score: 0.4340
+ROC AUC: 0.8477
+
+Confusion Matrix:
+[[1798 1101]
+ [  10  175]]
+
+
+======================================================================
+MODEL: Neural Network
+======================================================================
+
+Train+Val set: 12336 samples
+Test set:      3084 samples
+
+Tuning 24 hyperparameter combinations with 5-fold CV (metric: F1)...
+
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 0.0001} | Mean F1: 0.2702 | Folds: ['0.2669', '0.2862', '0.2588', '0.2478', '0.2912']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 1e-05} | Mean F1: 0.2616 | Folds: ['0.2541', '0.2746', '0.2414', '0.2552', '0.2826']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.2, 'lr': 0.0005, 'weight_decay': 0.0001} | Mean F1: 0.2679 | Folds: ['0.2675', '0.2665', '0.2458', '0.2492', '0.3103']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.2, 'lr': 0.0005, 'weight_decay': 1e-05} | Mean F1: 0.2529 | Folds: ['0.2507', '0.2586', '0.2426', '0.2374', '0.2752']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 0.0001} | Mean F1: 0.2697 | Folds: ['0.2643', '0.2736', '0.2537', '0.2446', '0.3121']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 1e-05} | Mean F1: 0.2710 | Folds: ['0.2769', '0.2650', '0.2526', '0.2642', '0.2963']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.4, 'lr': 0.0005, 'weight_decay': 0.0001} | Mean F1: 0.2600 | Folds: ['0.2626', '0.2659', '0.2441', '0.2532', '0.2742']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.4, 'lr': 0.0005, 'weight_decay': 1e-05} | Mean F1: 0.2547 | Folds: ['0.2424', '0.2654', '0.2404', '0.2489', '0.2765']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 0.0001} | Mean F1: 0.2654 | Folds: ['0.2726', '0.2696', '0.2505', '0.2529', '0.2813']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 1e-05} | Mean F1: 0.2669 | Folds: ['0.2667', '0.2648', '0.2624', '0.2559', '0.2847']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.2, 'lr': 0.0005, 'weight_decay': 0.0001} | Mean F1: 0.2577 | Folds: ['0.2429', '0.2690', '0.2399', '0.2507', '0.2857']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.2, 'lr': 0.0005, 'weight_decay': 1e-05} | Mean F1: 0.2597 | Folds: ['0.2756', '0.2543', '0.2380', '0.2541', '0.2765']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 0.0001} | Mean F1: 0.2694 | Folds: ['0.2500', '0.2808', '0.2672', '0.2513', '0.2979']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 1e-05} | Mean F1: 0.2751 | Folds: ['0.2792', '0.2868', '0.2627', '0.2552', '0.2914']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.4, 'lr': 0.0005, 'weight_decay': 0.0001} | Mean F1: 0.2634 | Folds: ['0.2373', '0.2804', '0.2575', '0.2488', '0.2929']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.4, 'lr': 0.0005, 'weight_decay': 1e-05} | Mean F1: 0.2603 | Folds: ['0.2481', '0.2630', '0.2510', '0.2484', '0.2910']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 0.0001} | Mean F1: 0.2611 | Folds: ['0.2727', '0.2566', '0.2549', '0.2531', '0.2679']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 1e-05} | Mean F1: 0.2691 | Folds: ['0.2627', '0.2802', '0.2450', '0.2565', '0.3013']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.2, 'lr': 0.0005, 'weight_decay': 0.0001} | Mean F1: 0.2526 | Folds: ['0.2519', '0.2522', '0.2500', '0.2415', '0.2675']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.2, 'lr': 0.0005, 'weight_decay': 1e-05} | Mean F1: 0.2532 | Folds: ['0.2431', '0.2614', '0.2553', '0.2569', '0.2491']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 0.0001} | Mean F1: 0.2536 | Folds: ['0.2512', '0.2454', '0.2358', '0.2602', '0.2754']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 1e-05} | Mean F1: 0.2628 | Folds: ['0.2495', '0.2711', '0.2635', '0.2471', '0.2829']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.4, 'lr': 0.0005, 'weight_decay': 0.0001} | Mean F1: 0.2541 | Folds: ['0.2521', '0.2287', '0.2507', '0.2549', '0.2841']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.4, 'lr': 0.0005, 'weight_decay': 1e-05} | Mean F1: 0.2550 | Folds: ['0.2691', '0.2455', '0.2488', '0.2448', '0.2667']
+
+Best Params:    {'hidden_sizes': (128, 64), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 1e-05}
+Best CV Mean F1: 0.2751
+
+Training final model...
+Epoch    1 | Val F1: 0.1132 | Threshold: 0.44
+Epoch   10 | Val F1: 0.2183 | Threshold: 0.51
+Epoch   20 | Val F1: 0.2310 | Threshold: 0.58
+Epoch   30 | Val F1: 0.2598 | Threshold: 0.62
+Epoch   40 | Val F1: 0.2687 | Threshold: 0.66
+Epoch   50 | Val F1: 0.2648 | Threshold: 0.66
+Epoch   60 | Val F1: 0.2657 | Threshold: 0.67
+Epoch   70 | Val F1: 0.2651 | Threshold: 0.69
+Epoch   80 | Val F1: 0.2705 | Threshold: 0.69
+Epoch   90 | Val F1: 0.2581 | Threshold: 0.69
+Epoch  100 | Val F1: 0.2711 | Threshold: 0.67
+Epoch  110 | Val F1: 0.2591 | Threshold: 0.66
+
+Early stopping at epoch 111. Best Val F1: 0.2753
+
+TEST RESULTS (best params: {'hidden_sizes': (128, 64), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 1e-05})
+Threshold:  0.6929
+Accuracy:   0.8473
+Recall:     0.4811
+Precision:  0.1918
+F1 Score:   0.2743
+ROC AUC:    0.8096
+
+Confusion Matrix:
+[[2524  375]
+ [  96   89]]
+
+
+======================================================================
+MODEL: Unsupervised
+======================================================================
+
+Normal (non-fraud) training samples: 11598
+Test samples: 3084 (185 fraud)
+
+Training Isolation Forest...
+Training Autoencoder...
+  Epoch  50 | Train Loss: 0.740885 | Val Loss: 0.676695
+  Epoch 100 | Train Loss: 0.569309 | Val Loss: 0.556757
+  Epoch 150 | Train Loss: 0.456982 | Val Loss: 0.483199
+  Epoch 200 | Train Loss: 0.377456 | Val Loss: 0.417712
+  Epoch 250 | Train Loss: 0.321900 | Val Loss: 0.360115
+  Epoch 300 | Train Loss: 0.282035 | Val Loss: 0.307584
+  Epoch 350 | Train Loss: 0.254890 | Val Loss: 0.270205
+  Epoch 400 | Train Loss: 0.234985 | Val Loss: 0.247949
+  Epoch 450 | Train Loss: 0.219411 | Val Loss: 0.230705
+  Epoch 500 | Train Loss: 0.208398 | Val Loss: 0.218078
+
+============================================================
+ISOLATION FOREST
+============================================================
+
+TEST RESULTS (Isolation Forest (max F1))
+Threshold: 0.3218
+Accuracy:  0.5065
+Recall:    0.5676
+Precision: 0.0679
+F1 Score:  0.1212
+F2 Score:  0.2296
+ROC AUC:   0.5073
+
+Confusion Matrix:
+[[1457 1442]
+ [  80  105]]
+
+TEST RESULTS (Isolation Forest (recall-priority))
+Threshold: 0.0991
+Accuracy:  0.0691
+Recall:    0.9946
+Precision: 0.0602
+F1 Score:  0.1136
+F2 Score:  0.2425
+ROC AUC:   0.5073
+
+Confusion Matrix:
+[[  29 2870]
+ [   1  184]]
+
+============================================================
+AUTOENCODER
+============================================================
+
+TEST RESULTS (Autoencoder (max F1))
+Threshold: 0.0100
+Accuracy:  0.5914
+Recall:    0.4811
+Precision: 0.0710
+F1 Score:  0.1238
+F2 Score:  0.2233
+ROC AUC:   0.5598
+
+Confusion Matrix:
+[[1735 1164]
+ [  96   89]]
+
+TEST RESULTS (Autoencoder (recall-priority))
+Threshold: 0.5000
+Accuracy:  0.9394
+Recall:    0.0000
+Precision: 0.0000
+F1 Score:  0.0000
+F2 Score:  0.0000
+ROC AUC:   0.5598
+
+Confusion Matrix:
+[[2897    2]
+ [ 185    0]]
+
+============================================================
+ENSEMBLE (Isolation Forest + Autoencoder)
+============================================================
+
+TEST RESULTS (Ensemble (max F1))
+Threshold: 0.1634
+Accuracy:  0.4942
+Recall:    0.5838
+Precision: 0.0679
+F1 Score:  0.1216
+F2 Score:  0.2317
+ROC AUC:   0.5088
+
+Confusion Matrix:
+[[1416 1483]
+ [  77  108]]
+
+TEST RESULTS (Ensemble (recall-priority))
+Threshold: 0.0496
+Accuracy:  0.0691
+Recall:    0.9946
+Precision: 0.0602
+F1 Score:  0.1136
+F2 Score:  0.2425
+ROC AUC:   0.5088
+
+Confusion Matrix:
+[[  29 2870]
+ [   1  184]]
+
+
+======================================================================
+END OF RESULTS
+======================================================================
