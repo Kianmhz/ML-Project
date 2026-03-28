@@ -72,7 +72,8 @@ policy_holder_age_mapping = {
     '16 to 17': 16.5, '18 to 20': 19, '21 to 25': 23, '26 to 30': 28,
     '31 to 35': 33, '36 to 40': 38, '41 to 50': 45.5, '51 to 65': 58, 'over 65': 70
 }
-df['PolicyHolderAge_Numeric'] = df['AgeOfPolicyHolder'].map(policy_holder_age_mapping).fillna(35)
+df['PolicyHolderAge_Numeric'] = df['AgeOfPolicyHolder'].map(policy_holder_age_mapping)
+df['PolicyHolderAge_Numeric'] = df['PolicyHolderAge_Numeric'].fillna(df['PolicyHolderAge_Numeric'].median())
 print("Added: PolicyHolderAge_Numeric")
 
 # Vehicle Price mapping
@@ -154,37 +155,43 @@ print("Added: PolicyHolder_Driver_Age_Diff")
 
 # Days between accident and claim
 df['Days_Accident_to_Claim'] = df['DaysPolicyClaim_Numeric'] - df['DaysPolicyAccident_Numeric']
-# Negative delay is invalid; clamp to zero.
-df['Days_Accident_to_Claim'] = df['Days_Accident_to_Claim'].clip(lower=0)
-print("Added: Days_Accident_to_Claim")
+# Negative = claim filed before accident date relative to policy — keep as fraud signal
+df['Claim_Before_Accident'] = (df['Days_Accident_to_Claim'] < 0).astype(int)
+print("Added: Days_Accident_to_Claim, Claim_Before_Accident")
 
 # Risk indicators
 df['Has_Past_Claims'] = (df['PastClaims_Numeric'] > 0).astype(int)
 df['New_Vehicle'] = (df['AgeOfVehicle'] == 'new').astype(int)
 df['Young_Driver'] = (df['Age_Numeric'] < 25).astype(int)
 df['High_Value_Vehicle'] = (df['VehiclePrice_Numeric'] > 50000).astype(int)
-df['External_Agent'] = (df['AgentType'] == 'External').astype(int)
-df['Is_Urban'] = (df['AccidentArea'] == 'Urban').astype(int)
-df['Policy_Holder_Fault'] = (df['Fault'] == 'Policy Holder').astype(int)
-print("Added: Has_Past_Claims, New_Vehicle, Young_Driver, High_Value_Vehicle, External_Agent, Is_Urban, Policy_Holder_Fault")
+# External_Agent, Is_Urban, Policy_Holder_Fault removed — duplicated by categorical columns below
+print("Added: Has_Past_Claims, New_Vehicle, Young_Driver, High_Value_Vehicle")
 
-# Encode month as numeric
+# Encode month as cyclical (sin/cos) to preserve Jan–Dec adjacency
 month_mapping = {
     'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
     'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12
 }
-df['Month_Numeric'] = df['Month'].map(month_mapping).fillna(6)
-df['MonthClaimed_Numeric'] = df['MonthClaimed'].map(month_mapping).fillna(6)
-print("Added: Month_Numeric, MonthClaimed_Numeric")
+month_num          = df['Month'].map(month_mapping).fillna(6)
+month_claimed_num  = df['MonthClaimed'].map(month_mapping).fillna(6)
+df['Month_Sin']        = np.sin(2 * np.pi * month_num / 12)
+df['Month_Cos']        = np.cos(2 * np.pi * month_num / 12)
+df['MonthClaimed_Sin'] = np.sin(2 * np.pi * month_claimed_num / 12)
+df['MonthClaimed_Cos'] = np.cos(2 * np.pi * month_claimed_num / 12)
+print("Added: Month_Sin, Month_Cos, MonthClaimed_Sin, MonthClaimed_Cos")
 
-# Encode day of week
+# Encode day of week as cyclical (sin/cos)
 day_mapping = {
     'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 'Thursday': 4,
     'Friday': 5, 'Saturday': 6, 'Sunday': 7
 }
-df['DayOfWeek_Numeric'] = df['DayOfWeek'].map(day_mapping).fillna(3)
-df['DayOfWeekClaimed_Numeric'] = df['DayOfWeekClaimed'].map(day_mapping).fillna(3)
-print("Added: DayOfWeek_Numeric, DayOfWeekClaimed_Numeric")
+dow_num         = df['DayOfWeek'].map(day_mapping).fillna(3)
+dow_claimed_num = df['DayOfWeekClaimed'].map(day_mapping).fillna(3)
+df['DayOfWeek_Sin']        = np.sin(2 * np.pi * dow_num / 7)
+df['DayOfWeek_Cos']        = np.cos(2 * np.pi * dow_num / 7)
+df['DayOfWeekClaimed_Sin'] = np.sin(2 * np.pi * dow_claimed_num / 7)
+df['DayOfWeekClaimed_Cos'] = np.cos(2 * np.pi * dow_claimed_num / 7)
+print("Added: DayOfWeek_Sin, DayOfWeek_Cos, DayOfWeekClaimed_Sin, DayOfWeekClaimed_Cos")
 
 # Weekend indicators
 df['Accident_Weekend'] = df['DayOfWeek'].isin(['Saturday', 'Sunday']).astype(int)
@@ -200,11 +207,13 @@ numerical_features = [
     'DaysPolicyAccident_Numeric', 'DaysPolicyClaim_Numeric', 'PastClaims_Numeric',
     'NumSupplements_Numeric', 'AddressChangeClaim_Numeric', 'NumCars_Numeric',
     'Deductible', 'DriverRating', 'WeekOfMonth', 'WeekOfMonthClaimed', 'Year',
-    'Driver_Vehicle_Age_Diff', 'PolicyHolder_Driver_Age_Diff', 'Days_Accident_to_Claim',
-    'Month_Numeric', 'MonthClaimed_Numeric', 'DayOfWeek_Numeric', 'DayOfWeekClaimed_Numeric',
+    'Driver_Vehicle_Age_Diff', 'PolicyHolder_Driver_Age_Diff',
+    'Days_Accident_to_Claim', 'Claim_Before_Accident',
+    'Month_Sin', 'Month_Cos', 'MonthClaimed_Sin', 'MonthClaimed_Cos',
+    'DayOfWeek_Sin', 'DayOfWeek_Cos', 'DayOfWeekClaimed_Sin', 'DayOfWeekClaimed_Cos',
     'PoliceReportFiled_Binary', 'WitnessPresent_Binary',
     'Has_Past_Claims', 'New_Vehicle', 'Young_Driver', 'High_Value_Vehicle',
-    'External_Agent', 'Is_Urban', 'Policy_Holder_Fault', 'Accident_Weekend', 'Claim_Weekend'
+    'Accident_Weekend', 'Claim_Weekend'
 ]
 
 categorical_features = [
