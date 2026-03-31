@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import numpy as np
-import json
 
 base_dir   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 data_dir   = os.path.join(base_dir, 'dataset', 'healthcare_fraud')
@@ -201,11 +200,3 @@ prov.to_csv(output_path, index=False)
 print(f"Saved: {output_path}")
 print(f"Shape: {prov.shape}")
 print(f"\nColumns:\n{list(prov.columns)}")
-
-# Save distribution
-dist = prov['PotentialFraud'].value_counts().to_dict()
-dist_path = os.path.join(base_dir, 'json', 'distribution_healthcare.json')
-with open(dist_path, 'w') as f:
-    json.dump(dist, f)
-print(f"\nClass distribution saved: {dist_path}")
-print(f"Distribution: {dist}")
