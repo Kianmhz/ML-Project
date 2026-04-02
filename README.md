@@ -9,33 +9,26 @@ A machine learning project comparing supervised and unsupervised fraud detection
 ```
 ML-Project/
 ├── dataset/
-│   ├── fraud_oracle.csv                         # Raw Oracle dataset
-│   ├── fraud_oracle_preprocessed.csv            # Preprocessed Oracle dataset
-│   └── healthcare_fraud/
-│       ├── Train-1542865627584.csv              # Provider fraud labels
-│       ├── Train_Beneficiarydata-1542865627584.csv
-│       ├── Train_Inpatientdata-1542865627584.csv
-│       └── Train_Outpatientdata-1542865627584.csv
-│   └── healthcare_fraud_preprocessed.csv        # Aggregated provider-level dataset
+│   ├── oracle_fraud/
+│   │   └── fraud_oracle.csv                         # Raw Oracle dataset
+│   ├── fraud_oracle_preprocessed.csv                # Preprocessed Oracle dataset
+│   ├── healthcare_fraud/
+│   │   ├── Train-1542865627584.csv                  # Provider fraud labels
+│   │   ├── Train_Beneficiarydata-1542865627584.csv
+│   │   ├── Train_Inpatientdata-1542865627584.csv
+│   │   └── Train_Outpatientdata-1542865627584.csv
+│   └── healthcare_fraud_preprocessed.csv            # Aggregated provider-level dataset
 ├── models/
-│   ├── logistic_regression_model.py             # Oracle — Logistic Regression
-│   ├── NN_model.py                              # Oracle — Neural Network
-│   ├── xgboost_model.py                         # Oracle — XGBoost (k-fold tuned)
-│   ├── unsupervised_model.py                    # Oracle — Isolation Forest + Autoencoder
-│   ├── logistic_regression_healthcare.py        # Healthcare — Logistic Regression
-│   ├── NN_healthcare.py                         # Healthcare — Neural Network (k-fold tuned)
-│   ├── xgboost_healthcare.py                    # Healthcare — XGBoost (k-fold tuned)
-│   └── unsupervised_healthcare.py               # Healthcare — Isolation Forest
+│   ├── LogisticRegression.py                        # Healthcare — Logistic Regression
+│   ├── NeuralNetworks.py                            # Healthcare — Neural Network (k-fold tuned)
+│   ├── XGBoost.py                                   # Healthcare — XGBoost (k-fold tuned)
+│   └── IsolationForest.py                           # Healthcare — Isolation Forest (unsupervised)
 ├── utils/
-│   ├── preprocess_fraud_oracle.py               # Oracle feature engineering
-│   ├── preprocess_healthcare_fraud.py           # Healthcare join + aggregation pipeline
-│   ├── downscale.py                             # Majority-class downsampling utility
-│   └── get_distribution.py                      # Class distribution extraction
-├── json/
-│   ├── distribution_oracle.json
-│   └── distribution_healthcare.json
-├── fraud_oracle_results.txt                     # Full Oracle results for all models
-├── run_oracle_results.py                        # Runs all Oracle models, saves results
+│   ├── preprocess_fraud_oracle.py                   # Oracle feature engineering
+│   └── preprocess_healthcare_fraud.py               # Healthcare join + aggregation pipeline
+├── fraud_oracle_results.txt                         # Full Oracle results for all models
+├── healthcare_results.txt                           # Full Healthcare results for all models
+├── results_oracle.json
 ├── requirements.txt
 └── README.md
 ```
@@ -46,7 +39,7 @@ ML-Project/
 
 ### 1. Fraud Oracle — Vehicle Insurance Claims
 
-**Source:** Vehicle Insurance Fraud Detection dataset
+**Source:** [Vehicle Insurance Fraud Detection — Figshare](https://figshare.com/articles/dataset/fraud_oracle_csv/24994233?file=44033394)
 **Rows:** 15,420 insurance claims | **Target:** `FraudFound_P` (binary)
 **Fraud rate:** ~6% (highly imbalanced)
 
@@ -60,7 +53,7 @@ ML-Project/
 
 ### 2. Healthcare Fraud — Medicare Provider Billing
 
-**Source:** Medicare Provider Fraud Detection dataset (Kaggle)
+**Source:** [Healthcare Provider Fraud Detection — Kaggle](https://www.kaggle.com/datasets/rohitrox/healthcare-provider-fraud-detection-analysis?resource=download)
 **Structure:** 4 relational CSV files joined by foreign keys
 
 | File | Rows | Description |
@@ -95,9 +88,9 @@ Key aggregated features include:
 
 | Model | Key Details |
 |-------|-------------|
-| **Logistic Regression** | PyTorch linear layer, weighted BCE loss, Adam optimizer, early stopping on val ROC-AUC |
-| **Neural Network** | Variable architecture (k-fold tuned), BatchNorm + Dropout, weighted BCE, early stopping on val F1 |
-| **XGBoost** | `binary:logistic`, `scale_pos_weight`, k-fold hyperparameter tuning optimised for F1, two evaluation thresholds |
+| **Logistic Regression** | PyTorch linear layer, weighted BCE loss, Adam optimizer, early stopping on val ROC-AUC, threshold optimised for F2 |
+| **Neural Network** | Variable architecture (k-fold tuned), BatchNorm + Dropout, weighted BCE, early stopping on val F2 |
+| **XGBoost** | `binary:logistic`, `scale_pos_weight`, k-fold hyperparameter tuning optimised for F2, threshold optimised for F2 |
 
 ### Unsupervised
 
@@ -111,7 +104,7 @@ Key aggregated features include:
 - **Split:** 80% train+val / 20% test (stratified), held-out test never used during tuning
 - **Scaling:** `StandardScaler` fit on training fold only, applied to val/test
 - **Class imbalance:** `pos_weight = n_neg / n_pos` in BCE loss; `scale_pos_weight` in XGBoost
-- **Thresholds:** Two thresholds evaluated — max F1 and recall-priority (≥0.91 recall, max precision)
+- **Thresholds:** Single threshold selected by maximising F2 on the validation set (F2 weights recall twice as heavily as precision, appropriate for fraud detection)
 - **Target encoding** (Oracle XGBoost): `Rep_Fraud_Rate`, `Make_Fraud_Rate`, `PolicyType_Fraud_Rate` computed on training fold only inside each CV fold to prevent leakage
 
 ---
@@ -120,21 +113,21 @@ Key aggregated features include:
 
 ### Fraud Oracle Dataset
 
-| Model | ROC AUC | F1 (max) | Recall (recall-priority) |
-|-------|:-------:|:--------:|:------------------------:|
-| Logistic Regression | 0.783 | 0.212 | 0.935 |
-| Neural Network | 0.810 | 0.274 | — |
-| XGBoost | **0.848** | **0.284** | **0.946** |
-| Isolation Forest (unsupervised) | 0.507 | 0.121 | 0.995 |
+| Model | ROC AUC | Recall | F1 |
+|-------|:-------:|:------:|:--:|
+| Logistic Regression | 0.783 | 0.935 | 0.212 |
+| Neural Network | 0.810 | 0.481 | 0.274 |
+| XGBoost | **0.848** | **0.946** | **0.284** |
+| Isolation Forest (unsupervised) | 0.507 | 0.568 | 0.121 |
 
 ### Healthcare Fraud Dataset
 
-| Model | ROC AUC | F1 (max) | Recall (recall-priority) |
-|-------|:-------:|:--------:|:------------------------:|
-| Logistic Regression | 0.958 | 0.654 | 0.921 |
-| Neural Network | 0.965 | 0.673 | 0.911 |
-| XGBoost | **0.970** | **0.711** | **0.980** |
-| Isolation Forest (unsupervised) | 0.891 | 0.485 | 0.911 |
+| Model | ROC AUC | Recall | F1 | F2 |
+|-------|:-------:|:------:|:--:|:--:|
+| Logistic Regression | 0.9618 | 0.8515 | 0.6693 | 0.7679 |
+| Neural Network | 0.9636 | 0.8416 | **0.6911** | 0.7741 |
+| XGBoost | **0.9703** | **0.9406** | 0.6620 | **0.8051** |
+| Isolation Forest (unsupervised) | 0.7918 | 0.7714 | 0.3306 | 0.5031 |
 
 ### Key Findings
 
@@ -165,15 +158,6 @@ pip install -r requirements.txt
 ```bash
 # Step 1: Preprocess raw data
 python utils/preprocess_fraud_oracle.py
-
-# Step 2: Run individual models
-python models/logistic_regression_model.py
-python models/NN_model.py
-python models/xgboost_model.py
-python models/unsupervised_model.py
-
-# Step 3: Run all Oracle models and save results
-python run_oracle_results.py
 ```
 
 ### Healthcare Fraud Pipeline
@@ -183,10 +167,10 @@ python run_oracle_results.py
 python utils/preprocess_healthcare_fraud.py
 
 # Step 2: Run individual models
-python models/logistic_regression_healthcare.py
-python models/NN_healthcare.py
-python models/xgboost_healthcare.py
-python models/unsupervised_healthcare.py
+python models/LogisticRegression.py
+python models/NeuralNetworks.py
+python models/XGBoost.py
+python models/IsolationForest.py
 ```
 
 ---

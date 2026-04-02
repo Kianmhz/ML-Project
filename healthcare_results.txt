@@ -1,0 +1,263 @@
+======================================================================
+HEALTHCARE FRAUD DATASET — MODEL RESULTS
+Generated: 2026-04-01 22:20:44
+======================================================================
+
+======================================================================
+MODEL: Logistic Regression
+======================================================================
+
+Training set:   3,895 samples (364 fraud)
+Validation set: 433 samples (41 fraud)
+Test set:       1,082 samples (101 fraud)
+
+Epoch    1 | Loss: 1.523708 | Val ROC-AUC: 0.415692
+Epoch   10 | Loss: 1.408062 | Val ROC-AUC: 0.552949
+Epoch   20 | Loss: 1.300256 | Val ROC-AUC: 0.661461
+Epoch   30 | Loss: 1.213887 | Val ROC-AUC: 0.728783
+Epoch   40 | Loss: 1.144711 | Val ROC-AUC: 0.778310
+Epoch   50 | Loss: 1.087815 | Val ROC-AUC: 0.814584
+Epoch   60 | Loss: 1.039840 | Val ROC-AUC: 0.840406
+Epoch   70 | Loss: 0.998753 | Val ROC-AUC: 0.856521
+Epoch   80 | Loss: 0.963265 | Val ROC-AUC: 0.870893
+Epoch   90 | Loss: 0.932473 | Val ROC-AUC: 0.883026
+Epoch  100 | Loss: 0.905672 | Val ROC-AUC: 0.898146
+Epoch  110 | Loss: 0.882273 | Val ROC-AUC: 0.918181
+Epoch  120 | Loss: 0.861762 | Val ROC-AUC: 0.931869
+Epoch  130 | Loss: 0.843690 | Val ROC-AUC: 0.937718
+Epoch  140 | Loss: 0.827671 | Val ROC-AUC: 0.942073
+Epoch  150 | Loss: 0.813379 | Val ROC-AUC: 0.944064
+Epoch  160 | Loss: 0.800543 | Val ROC-AUC: 0.945744
+Epoch  170 | Loss: 0.788939 | Val ROC-AUC: 0.946926
+Epoch  180 | Loss: 0.778386 | Val ROC-AUC: 0.947922
+Epoch  190 | Loss: 0.768732 | Val ROC-AUC: 0.948544
+Epoch  200 | Loss: 0.759857 | Val ROC-AUC: 0.949664
+Epoch  210 | Loss: 0.751660 | Val ROC-AUC: 0.950100
+Epoch  220 | Loss: 0.744055 | Val ROC-AUC: 0.951095
+Epoch  230 | Loss: 0.736974 | Val ROC-AUC: 0.951468
+Epoch  240 | Loss: 0.730358 | Val ROC-AUC: 0.951468
+Epoch  250 | Loss: 0.724155 | Val ROC-AUC: 0.951779
+Epoch  260 | Loss: 0.718325 | Val ROC-AUC: 0.952339
+Epoch  270 | Loss: 0.712828 | Val ROC-AUC: 0.952464
+Epoch  280 | Loss: 0.707634 | Val ROC-AUC: 0.952837
+Epoch  290 | Loss: 0.702715 | Val ROC-AUC: 0.952651
+Epoch  300 | Loss: 0.698047 | Val ROC-AUC: 0.952713
+Epoch  310 | Loss: 0.693607 | Val ROC-AUC: 0.952837
+Epoch  320 | Loss: 0.689378 | Val ROC-AUC: 0.952962
+Epoch  330 | Loss: 0.685342 | Val ROC-AUC: 0.953273
+Epoch  340 | Loss: 0.681484 | Val ROC-AUC: 0.953459
+Epoch  350 | Loss: 0.677792 | Val ROC-AUC: 0.953459
+Epoch  360 | Loss: 0.674252 | Val ROC-AUC: 0.953148
+Epoch  370 | Loss: 0.670855 | Val ROC-AUC: 0.953273
+Epoch  380 | Loss: 0.667591 | Val ROC-AUC: 0.953211
+Epoch  390 | Loss: 0.664450 | Val ROC-AUC: 0.953459
+
+Early stopping at epoch 398. Best Val ROC-AUC: 0.953646 (epoch 348)
+
+Best threshold (max F2):  0.7112  |  Val F2: 0.7778
+
+TEST RESULTS (Logistic Regression Healthcare (max F2))
+Threshold Used: 0.7112
+Accuracy:  0.9214
+Recall:    0.8515
+Precision: 0.5513
+F1 Score:  0.6693
+F2 Score:  0.7679
+ROC AUC:   0.9618
+
+Confusion Matrix:
+[[911  70]
+ [ 15  86]]
+
+
+======================================================================
+MODEL: XGBoost
+======================================================================
+
+Train+Val set: 4,328 samples (405 fraud)
+Test set:      1,082 samples (101 fraud)
+
+Tuning 72 hyperparameter combinations with 5-fold CV (metric: F2)...
+
+Params: {'max_depth': 4, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 3, 'reg_lambda': 1.0} | Mean F2: 0.7607 | Folds: ['0.7798', '0.7400', '0.7255', '0.7871', '0.7710']
+Params: {'max_depth': 4, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 3, 'reg_lambda': 3.0} | Mean F2: 0.7601 | Folds: ['0.7726', '0.7494', '0.7254', '0.7906', '0.7623']
+Params: {'max_depth': 4, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 5, 'reg_lambda': 1.0} | Mean F2: 0.7648 | Folds: ['0.7727', '0.7576', '0.7243', '0.7906', '0.7785']
+Params: {'max_depth': 4, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 5, 'reg_lambda': 3.0} | Mean F2: 0.7612 | Folds: ['0.7780', '0.7530', '0.7188', '0.7965', '0.7599']
+Params: {'max_depth': 4, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 10, 'reg_lambda': 1.0} | Mean F2: 0.7637 | Folds: ['0.7634', '0.7661', '0.7320', '0.7901', '0.7667']
+Params: {'max_depth': 4, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 10, 'reg_lambda': 3.0} | Mean F2: 0.7647 | Folds: ['0.7683', '0.7566', '0.7317', '0.8087', '0.7582']
+Params: {'max_depth': 4, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 1.0} | Mean F2: 0.7595 | Folds: ['0.7795', '0.7404', '0.7212', '0.7947', '0.7616']
+Params: {'max_depth': 4, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 3.0} | Mean F2: 0.7596 | Folds: ['0.7683', '0.7407', '0.7312', '0.7947', '0.7631']
+Params: {'max_depth': 4, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 5, 'reg_lambda': 1.0} | Mean F2: 0.7554 | Folds: ['0.7798', '0.7399', '0.7143', '0.7860', '0.7572']
+Params: {'max_depth': 4, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 5, 'reg_lambda': 3.0} | Mean F2: 0.7597 | Folds: ['0.7848', '0.7393', '0.7255', '0.7865', '0.7623']
+Params: {'max_depth': 4, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 10, 'reg_lambda': 1.0} | Mean F2: 0.7597 | Folds: ['0.7642', '0.7520', '0.7115', '0.8018', '0.7692']
+Params: {'max_depth': 4, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 10, 'reg_lambda': 3.0} | Mean F2: 0.7632 | Folds: ['0.7809', '0.7557', '0.7157', '0.7895', '0.7745']
+Params: {'max_depth': 4, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 3, 'reg_lambda': 1.0} | Mean F2: 0.7605 | Folds: ['0.7716', '0.7536', '0.7203', '0.7928', '0.7640']
+Params: {'max_depth': 4, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 3, 'reg_lambda': 3.0} | Mean F2: 0.7609 | Folds: ['0.7657', '0.7447', '0.7438', '0.7930', '0.7572']
+Params: {'max_depth': 4, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 5, 'reg_lambda': 1.0} | Mean F2: 0.7601 | Folds: ['0.7780', '0.7464', '0.7320', '0.7843', '0.7599']
+Params: {'max_depth': 4, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 5, 'reg_lambda': 3.0} | Mean F2: 0.7612 | Folds: ['0.7780', '0.7416', '0.7273', '0.7947', '0.7643']
+Params: {'max_depth': 4, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 10, 'reg_lambda': 1.0} | Mean F2: 0.7622 | Folds: ['0.7675', '0.7604', '0.7302', '0.7895', '0.7634']
+Params: {'max_depth': 4, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 10, 'reg_lambda': 3.0} | Mean F2: 0.7563 | Folds: ['0.7648', '0.7449', '0.7296', '0.7798', '0.7623']
+Params: {'max_depth': 4, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 1.0} | Mean F2: 0.7614 | Folds: ['0.7859', '0.7393', '0.7255', '0.7871', '0.7692']
+Params: {'max_depth': 4, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 3.0} | Mean F2: 0.7610 | Folds: ['0.7798', '0.7428', '0.7258', '0.7871', '0.7692']
+Params: {'max_depth': 4, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 5, 'reg_lambda': 1.0} | Mean F2: 0.7661 | Folds: ['0.7895', '0.7685', '0.7190', '0.7947', '0.7589']
+Params: {'max_depth': 4, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 5, 'reg_lambda': 3.0} | Mean F2: 0.7625 | Folds: ['0.7770', '0.7515', '0.7256', '0.8054', '0.7528']
+Params: {'max_depth': 4, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 10, 'reg_lambda': 1.0} | Mean F2: 0.7654 | Folds: ['0.7862', '0.7582', '0.7223', '0.7960', '0.7642']
+Params: {'max_depth': 4, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 10, 'reg_lambda': 3.0} | Mean F2: 0.7608 | Folds: ['0.7648', '0.7645', '0.7127', '0.7930', '0.7692']
+Params: {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 3, 'reg_lambda': 1.0} | Mean F2: 0.7613 | Folds: ['0.7710', '0.7425', '0.7263', '0.7978', '0.7692']
+Params: {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 3, 'reg_lambda': 3.0} | Mean F2: 0.7573 | Folds: ['0.7745', '0.7483', '0.7260', '0.7849', '0.7528']
+Params: {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 5, 'reg_lambda': 1.0} | Mean F2: 0.7659 | Folds: ['0.7895', '0.7598', '0.7267', '0.7947', '0.7588']
+Params: {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 5, 'reg_lambda': 3.0} | Mean F2: 0.7586 | Folds: ['0.7735', '0.7449', '0.7173', '0.7996', '0.7579']
+Params: {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 10, 'reg_lambda': 1.0} | Mean F2: 0.7621 | Folds: ['0.7639', '0.7620', '0.7216', '0.7930', '0.7701']
+Params: {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 10, 'reg_lambda': 3.0} | Mean F2: 0.7659 | Folds: ['0.7643', '0.7661', '0.7287', '0.8000', '0.7701']
+Params: {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 1.0} | Mean F2: 0.7640 | Folds: ['0.8054', '0.7407', '0.7329', '0.7785', '0.7623']
+Params: {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 3.0} | Mean F2: 0.7670 | Folds: ['0.7895', '0.7500', '0.7287', '0.8009', '0.7658']
+Params: {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 5, 'reg_lambda': 1.0} | Mean F2: 0.7617 | Folds: ['0.7788', '0.7566', '0.7186', '0.7906', '0.7640']
+Params: {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 5, 'reg_lambda': 3.0} | Mean F2: 0.7602 | Folds: ['0.7718', '0.7482', '0.7287', '0.7995', '0.7528']
+Params: {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 10, 'reg_lambda': 1.0} | Mean F2: 0.7657 | Folds: ['0.7753', '0.7669', '0.7225', '0.7912', '0.7726']
+Params: {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 10, 'reg_lambda': 3.0} | Mean F2: 0.7566 | Folds: ['0.7631', '0.7520', '0.7143', '0.7912', '0.7623']
+Params: {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 3, 'reg_lambda': 1.0} | Mean F2: 0.7611 | Folds: ['0.7848', '0.7296', '0.7375', '0.7883', '0.7651']
+Params: {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 3, 'reg_lambda': 3.0} | Mean F2: 0.7552 | Folds: ['0.7735', '0.7455', '0.7362', '0.7726', '0.7483']
+Params: {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 5, 'reg_lambda': 1.0} | Mean F2: 0.7588 | Folds: ['0.7895', '0.7442', '0.7256', '0.7727', '0.7620']
+Params: {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 5, 'reg_lambda': 3.0} | Mean F2: 0.7589 | Folds: ['0.7788', '0.7434', '0.7263', '0.7877', '0.7582']
+Params: {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 10, 'reg_lambda': 1.0} | Mean F2: 0.7645 | Folds: ['0.7692', '0.7541', '0.7275', '0.7930', '0.7785']
+Params: {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 10, 'reg_lambda': 3.0} | Mean F2: 0.7636 | Folds: ['0.7928', '0.7622', '0.7317', '0.7843', '0.7468']
+Params: {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 1.0} | Mean F2: 0.7589 | Folds: ['0.7816', '0.7379', '0.7187', '0.7778', '0.7788']
+Params: {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 3.0} | Mean F2: 0.7600 | Folds: ['0.7745', '0.7444', '0.7273', '0.7837', '0.7701']
+Params: {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 5, 'reg_lambda': 1.0} | Mean F2: 0.7561 | Folds: ['0.7675', '0.7661', '0.7246', '0.7708', '0.7516']
+Params: {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 5, 'reg_lambda': 3.0} | Mean F2: 0.7602 | Folds: ['0.7675', '0.7529', '0.7258', '0.7877', '0.7668']
+Params: {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 10, 'reg_lambda': 1.0} | Mean F2: 0.7555 | Folds: ['0.7741', '0.7558', '0.7225', '0.7709', '0.7545']
+Params: {'max_depth': 6, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 10, 'reg_lambda': 3.0} | Mean F2: 0.7598 | Folds: ['0.7625', '0.7624', '0.7216', '0.7978', '0.7547']
+Params: {'max_depth': 8, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 3, 'reg_lambda': 1.0} | Mean F2: 0.7567 | Folds: ['0.7805', '0.7339', '0.7187', '0.7952', '0.7549']
+Params: {'max_depth': 8, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 3, 'reg_lambda': 3.0} | Mean F2: 0.7582 | Folds: ['0.7741', '0.7420', '0.7249', '0.7866', '0.7633']
+Params: {'max_depth': 8, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 5, 'reg_lambda': 1.0} | Mean F2: 0.7654 | Folds: ['0.7877', '0.7545', '0.7312', '0.7947', '0.7589']
+Params: {'max_depth': 8, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 5, 'reg_lambda': 3.0} | Mean F2: 0.7617 | Folds: ['0.7870', '0.7445', '0.7212', '0.7996', '0.7563']
+Params: {'max_depth': 8, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 10, 'reg_lambda': 1.0} | Mean F2: 0.7665 | Folds: ['0.7639', '0.7739', '0.7216', '0.7978', '0.7753']
+Params: {'max_depth': 8, 'learning_rate': 0.05, 'subsample': 0.75, 'min_child_weight': 10, 'reg_lambda': 3.0} | Mean F2: 0.7631 | Folds: ['0.7643', '0.7661', '0.7287', '0.7912', '0.7648']
+Params: {'max_depth': 8, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 1.0} | Mean F2: 0.7590 | Folds: ['0.7812', '0.7404', '0.7258', '0.7965', '0.7511']
+Params: {'max_depth': 8, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 3.0} | Mean F2: 0.7628 | Folds: ['0.7913', '0.7490', '0.7285', '0.7900', '0.7551']
+Params: {'max_depth': 8, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 5, 'reg_lambda': 1.0} | Mean F2: 0.7627 | Folds: ['0.7805', '0.7449', '0.7242', '0.7991', '0.7646']
+Params: {'max_depth': 8, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 5, 'reg_lambda': 3.0} | Mean F2: 0.7591 | Folds: ['0.7735', '0.7477', '0.7285', '0.7960', '0.7500']
+Params: {'max_depth': 8, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 10, 'reg_lambda': 1.0} | Mean F2: 0.7605 | Folds: ['0.7753', '0.7576', '0.7212', '0.7931', '0.7555']
+Params: {'max_depth': 8, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 10, 'reg_lambda': 3.0} | Mean F2: 0.7598 | Folds: ['0.7631', '0.7557', '0.7231', '0.7982', '0.7589']
+Params: {'max_depth': 8, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 3, 'reg_lambda': 1.0} | Mean F2: 0.7551 | Folds: ['0.7634', '0.7434', '0.7269', '0.7839', '0.7579']
+Params: {'max_depth': 8, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 3, 'reg_lambda': 3.0} | Mean F2: 0.7610 | Folds: ['0.7770', '0.7520', '0.7317', '0.7802', '0.7643']
+Params: {'max_depth': 8, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 5, 'reg_lambda': 1.0} | Mean F2: 0.7533 | Folds: ['0.7834', '0.7431', '0.7228', '0.7701', '0.7474']
+Params: {'max_depth': 8, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 5, 'reg_lambda': 3.0} | Mean F2: 0.7590 | Folds: ['0.7845', '0.7440', '0.7265', '0.7895', '0.7505']
+Params: {'max_depth': 8, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 10, 'reg_lambda': 1.0} | Mean F2: 0.7609 | Folds: ['0.7692', '0.7576', '0.7275', '0.7960', '0.7543']
+Params: {'max_depth': 8, 'learning_rate': 0.1, 'subsample': 0.75, 'min_child_weight': 10, 'reg_lambda': 3.0} | Mean F2: 0.7587 | Folds: ['0.7683', '0.7449', '0.7317', '0.7833', '0.7652']
+Params: {'max_depth': 8, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 1.0} | Mean F2: 0.7601 | Folds: ['0.7826', '0.7373', '0.7265', '0.7906', '0.7633']
+Params: {'max_depth': 8, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 3.0} | Mean F2: 0.7535 | Folds: ['0.7660', '0.7461', '0.7200', '0.7862', '0.7495']
+Params: {'max_depth': 8, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 5, 'reg_lambda': 1.0} | Mean F2: 0.7562 | Folds: ['0.7675', '0.7510', '0.7126', '0.7789', '0.7710']
+Params: {'max_depth': 8, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 5, 'reg_lambda': 3.0} | Mean F2: 0.7555 | Folds: ['0.7727', '0.7459', '0.7229', '0.7965', '0.7396']
+Params: {'max_depth': 8, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 10, 'reg_lambda': 1.0} | Mean F2: 0.7541 | Folds: ['0.7708', '0.7547', '0.7173', '0.7701', '0.7576']
+Params: {'max_depth': 8, 'learning_rate': 0.1, 'subsample': 0.9, 'min_child_weight': 10, 'reg_lambda': 3.0} | Mean F2: 0.7608 | Folds: ['0.7625', '0.7653', '0.7233', '0.7965', '0.7566']
+
+Best Params:     {'max_depth': 6, 'learning_rate': 0.05, 'subsample': 0.9, 'min_child_weight': 3, 'reg_lambda': 3.0}
+Best CV Mean F2: 0.7670
+
+Best iteration:   33
+Best val ROC-AUC: 0.952806
+
+TEST RESULTS (XGBoost (max F2))
+Threshold Used: 0.1418
+Accuracy:  0.9104
+Recall:    0.9406
+Precision: 0.5108
+F1 Score:  0.6620
+F2 Score:  0.8051
+ROC AUC:   0.9703
+
+Confusion Matrix:
+[[890  91]
+ [  6  95]]
+
+
+======================================================================
+MODEL: Neural Network
+======================================================================
+
+Train+Val set: 4,328 samples (405 fraud)
+Test set:      1,082 samples (101 fraud)
+
+Tuning 24 hyperparameter combinations with 5-fold CV (metric: F2)...
+
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 0.0001} | Mean F2: 0.7483 | Folds: ['0.7579', '0.7676', '0.7372', '0.7400', '0.7388']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 1e-05} | Mean F2: 0.7435 | Folds: ['0.7553', '0.7469', '0.7230', '0.7489', '0.7431']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.2, 'lr': 0.0005, 'weight_decay': 0.0001} | Mean F2: 0.7425 | Folds: ['0.7562', '0.7510', '0.7312', '0.7399', '0.7343']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.2, 'lr': 0.0005, 'weight_decay': 1e-05} | Mean F2: 0.7394 | Folds: ['0.7435', '0.7547', '0.7246', '0.7411', '0.7328']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 0.0001} | Mean F2: 0.7447 | Folds: ['0.7566', '0.7541', '0.7287', '0.7480', '0.7363']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 1e-05} | Mean F2: 0.7445 | Folds: ['0.7562', '0.7585', '0.7267', '0.7363', '0.7447']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.4, 'lr': 0.0005, 'weight_decay': 0.0001} | Mean F2: 0.7407 | Folds: ['0.7473', '0.7475', '0.7312', '0.7399', '0.7379']
+Params: {'hidden_sizes': (64, 32), 'dropout': 0.4, 'lr': 0.0005, 'weight_decay': 1e-05} | Mean F2: 0.7392 | Folds: ['0.7459', '0.7563', '0.7380', '0.7245', '0.7312']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 0.0001} | Mean F2: 0.7509 | Folds: ['0.7709', '0.7660', '0.7312', '0.7500', '0.7363']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 1e-05} | Mean F2: 0.7478 | Folds: ['0.7500', '0.7676', '0.7287', '0.7528', '0.7396']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.2, 'lr': 0.0005, 'weight_decay': 0.0001} | Mean F2: 0.7468 | Folds: ['0.7660', '0.7495', '0.7275', '0.7469', '0.7440']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.2, 'lr': 0.0005, 'weight_decay': 1e-05} | Mean F2: 0.7472 | Folds: ['0.7666', '0.7645', '0.7249', '0.7420', '0.7379']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 0.0001} | Mean F2: 0.7469 | Folds: ['0.7710', '0.7536', '0.7314', '0.7317', '0.7468']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 1e-05} | Mean F2: 0.7486 | Folds: ['0.7631', '0.7531', '0.7275', '0.7556', '0.7435']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.4, 'lr': 0.0005, 'weight_decay': 0.0001} | Mean F2: 0.7430 | Folds: ['0.7657', '0.7350', '0.7340', '0.7424', '0.7377']
+Params: {'hidden_sizes': (128, 64), 'dropout': 0.4, 'lr': 0.0005, 'weight_decay': 1e-05} | Mean F2: 0.7389 | Folds: ['0.7517', '0.7557', '0.7186', '0.7374', '0.7311']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 0.0001} | Mean F2: 0.7509 | Folds: ['0.7666', '0.7609', '0.7424', '0.7411', '0.7434']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 1e-05} | Mean F2: 0.7440 | Folds: ['0.7625', '0.7557', '0.7073', '0.7609', '0.7335']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.2, 'lr': 0.0005, 'weight_decay': 0.0001} | Mean F2: 0.7353 | Folds: ['0.7556', '0.7544', '0.6984', '0.7396', '0.7287']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.2, 'lr': 0.0005, 'weight_decay': 1e-05} | Mean F2: 0.7428 | Folds: ['0.7849', '0.7403', '0.7234', '0.7375', '0.7278']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 0.0001} | Mean F2: 0.7479 | Folds: ['0.7621', '0.7652', '0.7287', '0.7489', '0.7343']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.4, 'lr': 0.001, 'weight_decay': 1e-05} | Mean F2: 0.7367 | Folds: ['0.7559', '0.7479', '0.7143', '0.7294', '0.7359']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.4, 'lr': 0.0005, 'weight_decay': 0.0001} | Mean F2: 0.7434 | Folds: ['0.7483', '0.7377', '0.7216', '0.7557', '0.7539']
+Params: {'hidden_sizes': (64, 32, 16), 'dropout': 0.4, 'lr': 0.0005, 'weight_decay': 1e-05} | Mean F2: 0.7340 | Folds: ['0.7604', '0.7375', '0.7070', '0.7300', '0.7350']
+
+Best Params:     {'hidden_sizes': (64, 32, 16), 'dropout': 0.2, 'lr': 0.001, 'weight_decay': 0.0001}
+Best CV Mean F2: 0.7509
+
+Training final model...
+Epoch    1 | Val F2: 0.3476 | Threshold: 0.53
+Epoch   10 | Val F2: 0.7083 | Threshold: 0.56
+Epoch   20 | Val F2: 0.7543 | Threshold: 0.66
+Epoch   30 | Val F2: 0.7675 | Threshold: 0.75
+Epoch   40 | Val F2: 0.7709 | Threshold: 0.77
+Epoch   50 | Val F2: 0.7709 | Threshold: 0.77
+Epoch   60 | Val F2: 0.7743 | Threshold: 0.77
+Epoch   70 | Val F2: 0.7709 | Threshold: 0.77
+Epoch   80 | Val F2: 0.7743 | Threshold: 0.77
+
+Early stopping at epoch 82. Best Val F2: 0.7743
+
+TEST RESULTS (Neural Network Healthcare (max F2))
+Threshold Used: 0.7663
+Accuracy:  0.9298
+Recall:    0.8416
+Precision: 0.5862
+F1 Score:  0.6911
+F2 Score:  0.7741
+ROC AUC:   0.9636
+
+Confusion Matrix:
+[[921  60]
+ [ 16  85]]
+
+
+======================================================================
+MODEL: Isolation Forest
+======================================================================
+
+Train samples: 4328
+Test samples:  1082 (105 fraud)
+
+============================================================
+ISOLATION FOREST (Unsupervised Baseline)
+============================================================
+Accuracy:  0.6969
+Recall:    0.7714
+Precision: 0.2104
+F1 Score:  0.3306
+F2 Score:  0.5031
+ROC AUC:   0.7918
+
+Confusion Matrix:
+[[673 304]
+ [ 24  81]]
+
+
+======================================================================
+END OF RESULTS
+======================================================================
