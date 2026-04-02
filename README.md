@@ -9,14 +9,7 @@ A machine learning project comparing supervised and unsupervised fraud detection
 ```
 ML-Project/
 ├── dataset/
-│   ├── oracle_fraud/
-│   │   └── fraud_oracle.csv                         # Raw Oracle dataset
 │   ├── fraud_oracle_preprocessed.csv                # Preprocessed Oracle dataset
-│   ├── healthcare_fraud/
-│   │   ├── Train-1542865627584.csv                  # Provider fraud labels
-│   │   ├── Train_Beneficiarydata-1542865627584.csv
-│   │   ├── Train_Inpatientdata-1542865627584.csv
-│   │   └── Train_Outpatientdata-1542865627584.csv
 │   └── healthcare_fraud_preprocessed.csv            # Aggregated provider-level dataset
 ├── models/
 │   ├── LogisticRegression.py                        # Healthcare — Logistic Regression
@@ -28,7 +21,6 @@ ML-Project/
 │   └── preprocess_healthcare_fraud.py               # Healthcare join + aggregation pipeline
 ├── fraud_oracle_results.txt                         # Full Oracle results for all models
 ├── healthcare_results.txt                           # Full Healthcare results for all models
-├── results_oracle.json
 ├── requirements.txt
 └── README.md
 ```
@@ -151,13 +143,6 @@ Key aggregated features include:
 
 ```bash
 pip install -r requirements.txt
-```
-
-### Fraud Oracle Pipeline
-
-```bash
-# Step 1: Preprocess raw data
-python utils/preprocess_fraud_oracle.py
 ```
 
 ### Healthcare Fraud Pipeline
