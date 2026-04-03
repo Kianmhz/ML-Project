@@ -205,10 +205,6 @@ Models evaluated on the held-out test set of 1,082 providers (101 fraud, ~9.4%).
 6. **Class weights matter less when fraud is easier to separate.** On Healthcare (9.4% fraud rate, strong billing signals), `pos_weight` tuning had minimal impact on ROC AUC (+0.003). On Oracle (6% fraud rate, weak signals), class weighting had a more meaningful effect on recall.
 
 7. **XGBoost's low decision threshold on Healthcare (0.14) reflects extreme recall optimisation.** The F2-maximising threshold of 0.14 means XGBoost flags a provider as fraudulent whenever its predicted probability exceeds 14%. This results in 91 false positives (non-fraudulent providers incorrectly flagged) against only 6 missed fraud providers in the 1,082-provider test set — an appropriate trade-off when the cost of missing fraud far exceeds the cost of a false investigation.
-![Threshold Sensitivity](figures/threshold_sensitivity.png)
-
-> The optimal threshold shown is found on the visualisation's test partition and may differ from the reported 0.14, which was selected on the held-out validation set during training.
-
 
 8. **The Autoencoder provides marginal uplift over Isolation Forest on Oracle (ROC AUC 0.560 vs 0.507) but both are near-random.** An ensemble of the two achieves ROC AUC 0.509, offering no meaningful gain. When the underlying feature space contains no anomaly structure, combining weak anomaly detectors does not recover discriminative power.
 
