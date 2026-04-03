@@ -18,7 +18,8 @@ ML-Project/
 │   └── IsolationForest.py                           # Healthcare — Isolation Forest (unsupervised)
 ├── utils/
 │   ├── preprocess_fraud_oracle.py                   # Oracle feature engineering
-│   └── preprocess_healthcare_fraud.py               # Healthcare join + aggregation pipeline
+│   ├── preprocess_healthcare_fraud.py               # Healthcare join + aggregation pipeline
+│   └── visualize.py                                 # Generate report figures → figures/
 ├── fraud_oracle_results.txt                         # Full Oracle results for all models
 ├── healthcare_results.txt                           # Full Healthcare results for all models
 ├── requirements.txt
@@ -134,6 +135,10 @@ Key aggregated features include:
 
 ## Results
 
+![ROC Curves](figures/roc_curves.png)
+
+> ROC curves generated on a shared test split (random_state=42). Supervised model AUCs are slightly lower than the table values below because `visualize.py` uses an unstratified split to match the original Isolation Forest evaluation. Relative ordering and the supervised vs unsupervised gap are preserved.
+
 ### Fraud Oracle Dataset
 
 Models were evaluated on the held-out test set of 3,084 claims (185 fraud, ~6%). Thresholds were chosen to maximise F1 (Oracle experiments). XGBoost results are shown for the recall-priority threshold (target recall ≥ 0.91) as it best captures fraud in a high-class-imbalance setting.
@@ -179,6 +184,8 @@ Models evaluated on the held-out test set of 1,082 providers (101 fraud, ~9.4%).
 | XGBoost | 890 | 91 | 6 | 95 |
 | Isolation Forest | 673 | 304 | 24 | 81 |
 
+![Precision-Recall Curves](figures/pr_curves.png)
+
 ---
 
 ### Key Findings
@@ -193,9 +200,15 @@ Models evaluated on the held-out test set of 1,082 providers (101 fraud, ~9.4%).
 
 5. **Feature engineering from relational joins is the highest-leverage action.** `total_reimbursed` alone accounted for ~30.8% of XGBoost feature importance on the healthcare dataset. This feature required joining 4 CSV files and aggregating 558k claims — it cannot be derived from a flat single-table dataset. No amount of modelling sophistication compensates for missing this aggregation step.
 
+![XGBoost Feature Importance](figures/feature_importance.png)
+
 6. **Class weights matter less when fraud is easier to separate.** On Healthcare (9.4% fraud rate, strong billing signals), `pos_weight` tuning had minimal impact on ROC AUC (+0.003). On Oracle (6% fraud rate, weak signals), class weighting had a more meaningful effect on recall.
 
 7. **XGBoost's low decision threshold on Healthcare (0.14) reflects extreme recall optimisation.** The F2-maximising threshold of 0.14 means XGBoost flags a provider as fraudulent whenever its predicted probability exceeds 14%. This results in 91 false positives (non-fraudulent providers incorrectly flagged) against only 6 missed fraud providers in the 1,082-provider test set — an appropriate trade-off when the cost of missing fraud far exceeds the cost of a false investigation.
+![Threshold Sensitivity](figures/threshold_sensitivity.png)
+
+> The optimal threshold shown is found on the visualisation's test partition and may differ from the reported 0.14, which was selected on the held-out validation set during training.
+
 
 8. **The Autoencoder provides marginal uplift over Isolation Forest on Oracle (ROC AUC 0.560 vs 0.507) but both are near-random.** An ensemble of the two achieves ROC AUC 0.509, offering no meaningful gain. When the underlying feature space contains no anomaly structure, combining weak anomaly detectors does not recover discriminative power.
 
@@ -245,6 +258,9 @@ python models/LogisticRegression.py
 python models/NeuralNetworks.py
 python models/XGBoost.py
 python models/IsolationForest.py
+
+# Step 3 (optional): Generate report figures → saved to figures/
+python utils/visualize.py
 ```
 
 ---
