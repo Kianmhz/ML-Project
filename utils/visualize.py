@@ -5,7 +5,6 @@ Saves 4 figures to figures/ that are NOT already covered by the UI screenshots:
   figures/roc_curves.png           — ROC curves, all models, Healthcare vs Oracle (side-by-side)
   figures/pr_curves.png            — Precision-Recall curves, Healthcare
   figures/feature_importance.png   — XGBoost feature importance, Healthcare top-20
-  figures/threshold_sensitivity.png — F2 / Recall / Precision vs threshold, XGBoost Healthcare
 
 Already covered by UI screenshots (skipped here):
   UI_images/CM.png         — Confusion matrices, all 4 Healthcare models
@@ -31,7 +30,7 @@ from sklearn.linear_model import LogisticRegression as SklearnLR
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import (
     roc_curve, auc, precision_recall_curve, average_precision_score,
-    roc_auc_score, fbeta_score, recall_score, precision_score,
+    roc_auc_score, fbeta_score,
 )
 from xgboost import XGBClassifier
 
@@ -377,7 +376,7 @@ ax.set_yticklabels(names_plot, fontsize=9.5)
 ax.set_xlabel('Feature Importance (gain)', fontsize=11)
 ax.set_title(
     'XGBoost Feature Importance  —  Healthcare Fraud (Top 20)\n'
-    'Medicare provider-level aggregation  |  red bar = total_reimbursed',
+    'Medicare provider-level aggregation',
     fontsize=12, fontweight='bold'
 )
 
@@ -389,45 +388,5 @@ for bar, (name, val) in zip(bars, reversed(top20)):
 
 plt.tight_layout()
 save('feature_importance.png')
-
-# ══════════════════════════════════════════════════════════════
-# FIGURE 4 — Threshold Sensitivity (XGBoost Healthcare)
-# ══════════════════════════════════════════════════════════════
-
-thresh_range = np.linspace(0.01, 0.99, 300)
-f2s, recs, precs = [], [], []
-
-for t in thresh_range:
-    y_pred = (xgb_hc_scores >= t).astype(int)
-    f2s.append(fbeta_score(y_hc_test, y_pred, beta=2, zero_division=0))
-    recs.append(recall_score(y_hc_test, y_pred, zero_division=0))
-    precs.append(precision_score(y_hc_test, y_pred, zero_division=0))
-
-best_t_idx = int(np.argmax(f2s))
-best_t     = thresh_range[best_t_idx]
-
-fig, ax = plt.subplots(figsize=(10, 5))
-ax.plot(thresh_range, recs,  color='#C0392B', linewidth=2.0, label='Recall')
-ax.plot(thresh_range, precs, color='#2980B9', linewidth=2.0, label='Precision')
-ax.plot(thresh_range, f2s,   color='#27AE60', linewidth=2.5, label='F2 Score')
-
-ax.axvline(x=best_t, color='#555555', linestyle='--', linewidth=1.8,
-           label=f'Optimal threshold ({best_t:.2f})  →  F2 = {f2s[best_t_idx]:.3f}')
-ax.axvline(x=0.50,   color='black',   linestyle=':',  linewidth=1.2, alpha=0.5,
-           label='Default threshold (0.50)')
-
-ax.fill_betweenx([0, 1], 0, best_t, alpha=0.04, color='#27AE60')
-
-ax.set_xlabel('Decision Threshold', fontsize=11)
-ax.set_ylabel('Score', fontsize=11)
-ax.set_title(
-    'Threshold Sensitivity  —  XGBoost Healthcare\n'
-    'Trade-off between Recall, Precision, and F2 as the decision threshold varies',
-    fontsize=12, fontweight='bold'
-)
-ax.legend(fontsize=10)
-ax.set_xlim([0, 1]);  ax.set_ylim([0, 1.05])
-plt.tight_layout()
-save('threshold_sensitivity.png')
 
 print("\nDone. All figures saved to figures/")
